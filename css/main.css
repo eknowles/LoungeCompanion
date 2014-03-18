@@ -1,0 +1,954 @@
+body {
+    /*background-image : url(chrome-extension://__MSG_@@extension_id__/img/Guarded.jpg) !important;*/
+    background-repeat : no-repeat !important;
+    background-position : center top !important;
+    background-color : #000 !important;
+    color : #BBB !important;
+    font-family : Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+select, input {
+    height : 30px !important;
+    /*float: left;*/
+}
+.active-team {
+    box-shadow : 0 0 10px #FF8A00;
+}
+.lc-stattrak {
+    width : 32px;
+    height : 32px;
+    position : absolute;
+    top : -10px;
+    left : -10px;
+    background-image : url(chrome-extension://__MSG_@@extension_id__/img/stattrak-icon.png) !important;
+}
+.lc-souvenir {
+    position : absolute;
+    bottom : 19px;
+    left : 0px;
+    width : 28%;
+    height : 28%;
+}
+.lc-souvenir img {
+    width : 100%;
+    height : 100%;
+    content : url(chrome-extension://__MSG_@@extension_id__/img/souvenir-icon.png) !important;
+}
+img.lc-preview-souvenir {
+    display : none;
+    position : absolute;
+    bottom : 40px;
+    left : 10px;
+    width : 100px;
+    content : url(chrome-extension://__MSG_@@extension_id__/img/souvenir-icon-big.png) !important;
+}
+img.lc-preview-stattrak {
+    display : none;
+    position : absolute;
+    top : -50px;
+    left : -50px;
+    width : 150px;
+    z-index : 999;
+    content : url(chrome-extension://__MSG_@@extension_id__/img/stattrak-icon-big.png) !important;
+}
+img.lc-preview-spinner {
+    position : absolute;
+    content : url(chrome-extension://__MSG_@@extension_id__/img/spin.gif) !important;
+}
+div#countdown {
+    display : none;
+    position : fixed;
+    font-weight : bold;
+    font-size : 2em;
+    text-align : center;
+    width : 100px;
+}
+.lc-preview-steamlink, .lc-preview-steamlink:active {
+    display : none;
+    float : left !important;
+    position : absolute !important;
+    top : 440px !important;
+    left : 0px !important;
+    margin-left : 0px !important;
+    opacity : 0.4 !important;
+}
+.lc-preview-steamlink:hover {
+    opacity : 1 !important;
+}
+section.box {
+    /*If dark*/
+    background-color : rgba(41, 41, 41, 0.8);
+    padding : 20px;
+    margin : 20px 0px 0 20px !important;
+    width : -moz-calc(50% - 70px) !important;
+    width : -webkit-calc(50% - 70px) !important;
+    width : -o-calc(50% - 70px) !important;
+    width : calc(50% - 70px) !important;
+    -webkit-border-radius : 1px;
+    -moz-border-radius : 1px;
+    border-radius : 2px;
+    border : 1px solid #000 !important;
+    box-shadow : 0 0 5px 0 rgba(0, 0, 0, .8);
+    /*if light*/
+    /*background-color: rgba(41, 41, 41, 1);*/
+}
+#submenu {
+    float : left !important;
+    background-color : rgba(41, 41, 41, 0.8) !important;
+    box-shadow : 0 0 5px 0 rgba(0, 0, 0, .8);
+    border-right : 1px solid #000;
+    /*height: 100%;*/
+}
+#tradelist, .tradeheader, .item .smallimg, .full {
+    width : 100% !important;
+}
+.item .smallimg {
+	overflow: hidden !important;
+	margin-left: 0 !important;
+	margin-top: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+}
+img.smallimg:hover
+{
+	filter: saturate(100%);
+	-webkit-filter: saturate(100%);
+	-moz-filter: saturate(100%);
+	-o-filter: saturate(100%);
+	-ms-filter: saturate(100%);
+}
+#mCalculate > .bpheader {
+    margin-bottom : 10px;
+}
+.full {
+    margin : 0 !important;
+}
+.w35 {
+    float : left;
+    width : calc(100% / 3);
+}
+.clear {
+    clear : both;
+}
+#chart_div {
+    display : none !important;
+}
+.button, .buttonright {
+    /*display : none !important;*/
+}
+a.lc-button {
+    /*display : none;*/
+    color : #333 !important;
+}
+.button, .buttonright, .lc-button {
+    float : right !important;
+    margin : 0 3px !important;
+    text-align : right !important;
+    box-shadow : 0px 1px 0px 0px #1C1B18 !important;
+    background : -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #FFF), color-stop(1, #D1D1D1)) !important;
+    background : -moz-linear-gradient(top, #FFF 5%, #D1D1D1 100%) !important;
+    background : -webkit-linear-gradient(top, #FFF 5%, #D1D1D1 100%) !important;
+    background : -o-linear-gradient(top, #FFF 5%, #D1D1D1 100%) !important;
+    background : -ms-linear-gradient(top, #FFF 5%, #D1D1D1 100%) !important;
+    background : linear-gradient(to bottom, #FFF 5%, #D1D1D1 100%) !important;
+    filter : progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#d1d1d1', GradientType=0) !important;
+    background-color : #FFF !important;
+    -moz-border-radius : 4px !important;
+    -webkit-border-radius : 4px !important;
+    border-radius : 4px !important;
+    border : 1px solid #000 !important;
+    display : inline-block !important;
+    cursor : pointer !important;
+    color : #505739 !important;
+    font-family : Arial, "Helvetica Neue", Helvetica, sans-serif !important;
+    font-size : 14px !important;
+    font-weight : bold !important;
+    padding : 6px 13px !important;
+    text-decoration : none !important;
+    text-shadow : 0px 1px 0px #FFF !important;
+}
+.lc-button:hover, .button:hover, .buttonright:hover, .pressed {
+    background : -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #D1D1D1), color-stop(1, #FFF)) !important;
+    background : -moz-linear-gradient(top, #D1D1D1 5%, #FFF 100%) !important;
+    background : -webkit-linear-gradient(top, #D1D1D1 5%, #FFF 100%) !important;
+    background : -o-linear-gradient(top, #D1D1D1 5%, #FFF 100%) !important;
+    background : -ms-linear-gradient(top, #D1D1D1 5%, #FFF 100%) !important;
+    background : linear-gradient(to bottom, #D1D1D1 5%, #FFF 100%) !important;
+    filter : progid:DXImageTransform.Microsoft.gradient(startColorstr='#d1d1d1', endColorstr='#ffffff', GradientType=0) !important;
+    background-color : #D1D1D1 !important;
+    box-shadow : 0px 1px 0px 0px #1C1B18 !important;
+}
+.lc-button:active, .button:active, .buttonright:active, .pressed {
+    position : relative;
+    top : 1px;
+}
+#teamA, #teamB {
+    font-size : 3em;
+    /*position              : absolute;*/
+    /*top                   : 20px;*/
+    text-shadow : 0 0 15px rgba(255, 255, 255, 0.3) !important;
+    background-color : rgba(0, 0, 0, .5);
+    font-weight : bold;
+    padding : 0 0.5em;
+    -webkit-border-radius : 5px;
+    -moz-border-radius : 5px;
+    border-radius : 5px;
+}
+#mCalculate > .full {
+    height : 70px;
+}
+#teamA {
+    color : #71B9F9;
+    right : 55%;
+}
+#teamB {
+    color : #FF7200;
+    left : 55%;
+}
+.lc-button-bar {
+    margin-top : -21px;
+    margin-bottom : 40px;
+}
+.selectbox {
+    float : right;
+    height : 30px !important;
+    margin : 0 !important;
+    padding : 0px 0 0 10px !important;
+    background : none repeat scroll 0 0 #3F3F3F !important;
+    border : 1px solid #111 !important;
+    color : #BBB !important;
+    border-radius : 3px !important;
+    -webkit-box-shadow : inset 0 0 3px 0 rgba(0, 0, 0, .6) !important;
+    box-shadow : inset 0 0 3px 0 rgba(0, 0, 0, .6) !important;
+}
+.item {
+    display : none;
+    margin : 3px !important;
+    position: relative;
+    border : 1px solid #000 !important;
+    color : #BBB !important;
+    border-radius : 2px !important;
+    background : #3F3F3F !important;
+    background : -webkit-radial-gradient(40% 40%, ellipse cover, #3F3F3F 0%, #292929 80%) !important;
+    background : -o-radial-gradient(40% 40%, ellipse cover, #3F3F3F 0%, #292929 80%) !important;
+    background : -ms-radial-gradient(40% 40%, ellipse cover, #3F3F3F 0%, #292929 80%) !important;
+    background : radial-gradient(ellipse at 40% 40%, #3F3F3F 0%, #292929 80%) !important;
+    -webkit-box-shadow : 0 0 1px 0 rgba(0, 0, 0, 0.8);
+    box-shadow : 0 0 1px 0 rgba(0, 0, 0, 0.8);
+    position : relative;
+    max-width : none !important;
+    min-width : 70px !important;
+    height : 150% !important;
+}
+.item:hover, .name {
+    border : 1px solid #666 !important;
+    color : #BBB !important;
+    background : #565656 !important;
+    /*box-shadow : 0 0 200px 100px rgba(0,0,0,0.5);*/
+    background : url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNzUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM1NjU2NTYiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMzgzODM4IiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L3JhZGlhbEdyYWRpZW50PgogIDxyZWN0IHg9Ii01MCIgeT0iLTUwIiB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) !important;
+    background : -moz-radial-gradient(center, ellipse cover, #565656 0%, #383838 100%) !important;
+    background : -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #565656), color-stop(100%, #383838)) !important;
+    background : -webkit-radial-gradient(center, ellipse cover, #565656 0%, #383838 100%) !important;
+    background : -o-radial-gradient(center, ellipse cover, #565656 0%, #383838 100%) !important;
+    background : -ms-radial-gradient(center, ellipse cover, #565656 0%, #383838 100%) !important;
+    background : radial-gradient(ellipse at center, #565656 0%, #383838 100%) !important;
+    filter : progid:DXImageTransform.Microsoft.gradient(startColorstr='#565656', endColorstr='#383838', GradientType=1) !important;
+}
+.picked, .picked:hover {
+    background : #C1C1C1 !important;
+    background : url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNzUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNjMWMxYzEiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNmQ2ZDZkIiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L3JhZGlhbEdyYWRpZW50PgogIDxyZWN0IHg9Ii01MCIgeT0iLTUwIiB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) !important;
+    background : -moz-radial-gradient(center, ellipse cover, #C1C1C1 0%, #6D6D6D 100%) !important;
+    background : -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #C1C1C1), color-stop(100%, #6D6D6D)) !important;
+    background : -webkit-radial-gradient(center, ellipse cover, #C1C1C1 0%, #6D6D6D 100%) !important;
+    background : -o-radial-gradient(center, ellipse cover, #C1C1C1 0%, #6D6D6D 100%) !important;
+    background : -ms-radial-gradient(center, ellipse cover, #C1C1C1 0%, #6D6D6D 100%) !important;
+    background : radial-gradient(ellipse at center, #C1C1C1 0%, #6D6D6D 100%) !important;
+    filter : progid:DXImageTransform.Microsoft.gradient(startColorstr='#c1c1c1', endColorstr='#6d6d6d', GradientType=1) !important;
+}
+#modalPreview {
+    box-shadow : 0px 0px 30px 10px #000 !important;
+    background : #3F3F3F !important;
+    background : -webkit-radial-gradient(40% 40%, ellipse cover, #3F3F3F 0%, #292929 80%) !important;
+    background : -o-radial-gradient(40% 40%, ellipse cover, #3F3F3F 0%, #292929 80%) !important;
+    background : -ms-radial-gradient(40% 40%, ellipse cover, #3F3F3F 0%, #292929 80%) !important;
+    background : radial-gradient(ellipse at 40% 40%, #3F3F3F 0%, #292929 80%) !important;
+}
+.tradecnt {
+    background-size : 3% !important;
+}
+#satrade {
+    float : left;
+    width : 100%;
+    border-radius : 0 !important;
+    box-shadow : none !important;
+    border-top : none !important;
+    background : transparent !important;
+}
+.left, .right {
+    width : 47% !important;
+}
+.left, .right, .winsorloses {
+    background : rgba(15, 15, 14, 0.36) !important;
+    border : 1px solid #000 !important;
+    border-radius : 2px !important;
+    box-shadow : 1px 1px 0 0 #2F2F30 !important;
+    padding : 4px !important;
+}
+.winsorloses {
+    width : -moz-calc(49% - 20px) !important;
+    width : -webkit-calc(49% - 20px) !important;
+    width : -o-calc(49% - 20px) !important;
+    width : calc(49% - 20px) !important;
+    margin : 0 10px 10px 0 !important;
+    width : calc(50% - 15px) !important;
+}
+.winsorloses:nth-child(even) {
+    margin : 0 0px 10px 0 !important;
+}
+.title {
+    position : relative !important;
+    margin : 0 0 20px 0 !important;
+}
+.standard {
+    margin : 0 !important;
+    width : 100% !important;
+}
+.tradepoll {
+    min-height : 50px !important;
+    float : left;
+    margin : 0px 0 20px 0px !important;
+    width : calc(100%) !important;
+}
+.tradepoll .left, .tradepoll .right {
+    min-height : 50px !important;
+}
+#profile > .tradepoll {
+}
+.user {
+    color : #888 !important;
+}
+.tradeheader, .bpheader {
+    width : calc(100%) !important;
+    margin : 0px 0 !important;
+    padding : 8px 0px !important;
+    border-top : 1px solid #504E4E !important;
+    background : rgba(41, 41, 41, 0.0) !important;
+    background : -webkit-radial-gradient(top, ellipse cover, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+    background : -o-radial-gradient(top, ellipse cover, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+    background : -ms-radial-gradient(top, ellipse cover, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+    background : radial-gradient(ellipse at top, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+}
+.standard > .bpheader {
+    margin-top : 20px !important;
+    font-weight : bold;
+    font-size : 0.8em;
+    text-transform : uppercase;
+    color : #FFF;
+    border-top : none !important;
+}
+#tradelist a, .whenm {
+    color : #DDD !important;
+    text-shadow : 1px 1px 0px #000 !important;
+}
+
+.name {
+    /*display : none !important;*/
+    width: 200% !important;
+    /*max-width: 200px !important;*/
+    left: -50%;
+    top: 100%;
+}
+div.name a {
+	color: #ff8a00 !important;
+	text-shadow: 0px 0px 1px #000;
+}
+.whenm {
+    font-weight : bold !important;
+    padding : 8px !important;
+    width : calc(50% - 16px) !important;
+}
+.matchmain .winsorloses > .matchheader > .whenm {
+    width : 100% !important;
+}
+/*MY BETS PAGE*/
+ .lc-bet-swap {
+    float : right;
+    margin-right : 15px !important;
+    font-size : 1em !important;
+    opacity : 0.35;
+}
+.lc-bet-swap:hover {
+    text-decoration : underline;
+    text-shadow : 0 0 10px rgba(255, 255, 255, 0.5);
+    opacity : 1;
+}
+.lc-current-bets > .half, .lc-current-bets > .full {
+    padding : 0 !important;
+    margin : 0 !important;
+}
+.lc-current-bets > .half {
+    width : 50% !important;
+}
+.lc-current-bets {
+    color : #FFF;
+}
+.lc-current-bets a {
+    color : #FF8A00;
+}
+.lc-current-bets hr {
+    margin-left : -4px !important;
+    width : calc(100% + 8px) !important;
+}
+.lc-bet-teams b {
+    font-size : 2em;
+}
+.lc-bet-teams span {
+    padding : 10px 0;
+    text-shadow : 0 0 10px #000;
+}
+.lc-bet-teams a:hover span {
+    text-shadow : 0 0 80px rgba(255, 255, 255, 0.7);
+}
+.lc-sidemenu {
+    z-index : 1000;
+}
+.matchmain .winsorloses {
+    padding : 6px !important;
+}
+/*Horizonal Rule*/
+ hr {
+    margin : 6px 0 !important;
+    border : 0;
+    display : block;
+    border-bottom : 1px solid #333 !important;
+    border-top : 1px solid #000 !important;
+    background-color : #2D2D2D !important;
+    width : 100% !important;
+    float : left;
+}
+.matchheader {
+    width : 100% !important;
+    padding : 0 !important;
+    border-top : 1px solid #504E4E !important;
+    background : rgba(41, 41, 41, 0.0) !important;
+    background : -webkit-radial-gradient(top, ellipse cover, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+    background : -o-radial-gradient(top, ellipse cover, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+    background : -ms-radial-gradient(top, ellipse cover, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+    background : radial-gradient(ellipse at top, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+}
+.winsorloses > .matchheader {
+    border-top : none !important;
+    margin-top : -4px;
+}
+.winsorloses > .matchheader > span.whenm {
+    width : 100% !important;
+}
+.donor {
+	color: #5E98D9 !important;
+	text-shadow: none !important;
+	background: url(../img/donor.png) no-repeat left;
+}
+.item .rarity {
+	margin-top: -5px !important;
+    color : #DDD !important;
+    text-shadow : 1px 1px 0px #000 !important;
+    background : none !important;
+    -webkit-border-radius : 0 0 3px 3px !important;
+    border-radius : 0 0 3px 3px !important;
+}
+.name {
+    text-shadow : 0px 0px 3px #000 !important;
+}
+.itemval, .itemprice {
+    position : absolute;
+    font-size : 0.65em;
+    font-weight : bold;
+    padding : 1px 3px 2px 4px;
+    max-width : 195px;
+    text-align : left;
+    color : #CCC !important;
+    text-shadow : 1px 1px 0px #000 !important;
+}
+.itemval {
+    top : 0;
+    right : 0;
+    -webkit-border-radius : 0 1px 0px 4px !important;
+    border-radius : 0 1px 0px 4px !important;
+    background : rgba(0, 0, 0, 0.7) !important;
+}
+.itemprice {
+    bottom : 15px;
+    left : 0;
+    -webkit-border-radius : 0 1px 0px 4px !important;
+    border-radius : 0 1px 0px 4px !important;
+    width : 100%;
+    text-align : center;
+}
+.clreff {
+    font-size : 0.5em !important;
+    padding : 1px 4px 2px 3px !important;
+    border-radius : 0 0 6px 0 !important;
+    opacity : 0.7;
+}
+.picked .rarity, .rarity:hover {
+    color : #000 !important;
+    text-shadow : 0px 1px 1px rgba(255, 255, 255, 0.5) !important;
+    background : rgba(255, 255, 255, 0.9) !important;
+    -webkit-border-radius : 0 0 3px 3px !important;
+    border-radius : 0 0 3px 3px !important;
+}
+.picked:before {
+    content : url(img/star.png);
+    position : absolute;
+    bottom : 15px;
+    left : 2px;
+}
+#main {
+    margin-left : 200px !important;
+    margin-right : 0px !important;
+    /*overflow-x: visible !important;*/
+}
+#main > .box > .gradient > .full {
+    color : #DDD !important;
+}
+.message {
+    background : #565656 !important;
+    border : 1px solid #262626 !important;
+    border-radius : 0px !important;
+    padding : 7px 7px 9px 7px !important;
+    box-shadow : 1px 1px 0 0 #5B5B5B !important;
+    width : calc(100% - 20px) !important;
+    margin : 0 0 10px 0 !important;
+}
+#messages > .messages {
+    margin-bottom : 10px;
+}
+.message > textarea {
+    background-color : rgba(0, 0, 0, 0) !important;
+    color : #898989 !important;
+    font-size : 12px !important;
+    outline : none !important;
+}
+.fullscreen_dark {
+    display : none;
+    background : rgba(0, 0, 0, 0.75);
+    width : 100%;
+    position : absolute;
+    top : 0;
+    left : 0;
+}
+.gradient {
+    color : inherit !important;
+    text-shadow : none !important;
+    background : transparent !important;
+    margin-bottom : 0px !important;
+    padding : 10px 0 !important;
+    width : 100% !important;
+    border : none !important;
+    box-shadow : none !important;
+    border-radius : 0px !important;
+    border-top : none !important;
+    background : rgba(41, 41, 41, 0.0) !important;
+    background : -webkit-radial-gradient(top, ellipse cover, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+    background : -o-radial-gradient(top, ellipse cover, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+    background : -ms-radial-gradient(top, ellipse cover, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+    background : radial-gradient(ellipse at top, rgba(122, 122, 122, 0.3) 0%, rgba(41, 41, 41, 0.0) 65%) !important;
+}
+.box > .gradient {
+    margin-top : -20px !important;
+    padding-top : 20px !important;
+    min-height : 50px !important;
+    border-top : none !important;
+}
+.potwin {
+    margin : 0 0% !important;
+    color : #FF8A00 !important;
+    font-size : 1.2em !important;
+    padding : 8px !important;
+    float : right !important;
+    background : #111 !important;
+    -webkit-border-radius : 2px !important;
+    border-radius : 2px !important;
+    border : 1px solid #000;
+}
+.match, .winnings {
+    box-shadow : 0px 0px 8px #000 !important;
+    color : #333 !important;
+}
+.notaviable {
+}
+.simplePagerNav li a {
+    color : #C7C7C7 !important;
+    background : #3F3F3F !important;
+    background : -moz-linear-gradient(top, #3F3F3F 0%, #262626 100%) !important;
+    background : -webkit-gradient(linear, left top, left bottom, color-stop(0%, #3F3F3F), color-stop(100%, #262626)) !important;
+    background : -webkit-linear-gradient(top, #3F3F3F 0%, #262626 100%) !important;
+    background : -o-linear-gradient(top, #3F3F3F 0%, #262626 100%) !important;
+    background : -ms-linear-gradient(top, #3F3F3F 0%, #262626 100%) !important;
+    background : linear-gradient(to bottom, #3F3F3F 0%, #262626 100%) !important;
+    filter : progid:DXImageTransform.Microsoft.gradient(startColorstr='#3f3f3f', endColorstr='#262626', GradientType=0) !important;
+    text-shadow : 0px 1px 1px #000 !important;
+    box-shadow : 0px 0px 4px #000 !important;
+}
+.simplePagerNav li a:hover {
+    box-shadow : 0px 0px 4px #FFF !important;
+}
+.simplePagerNav li a.currentpage {
+    box-shadow : 0px 0px 4px #CCC !important;
+}
+#backpack {
+    color: #CCC;
+}
+#backpack, #armory {
+    padding-bottom : 40px;
+}
+#armory {
+    width : 100% !important;
+    padding : 0 !important;
+}
+#profile #avatar {
+    margin : 0em 20px 20px 0 !important;
+}
+#queue {
+    color : #444 !important;
+    width : 300px !important;
+    padding : 20px !important;
+    background-color : rgba(255, 255, 255, 0.9) !important;
+    border : 2px solid #000 !important;
+    box-shadow : 0px 0px 10px rgba(0, 0, 0, 1) !important;
+    -moz-box-shadow : 0px 0px 10px rgba(0, 0, 0, 1) !important;
+    -webkit-box-shadow : 0px 0px 10px rgba(0, 0, 0, 1) !important;
+}
+#queue a {
+    display : block !important;
+    color : #000 !important;
+    text-shadow : 1px 1px 0px #FFF !important;
+}
+#queue a, #queue button {
+    display : block !important;
+    opacity : 1;
+}
+#placebut {
+    text-align : right;
+}
+#mCalculate {
+    z-index : 200;
+    background : rgb(69, 72, 77) !important;
+    background : url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNzUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM0NTQ4NGQiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMjgyODI4IiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L3JhZGlhbEdyYWRpZW50PgogIDxyZWN0IHg9Ii01MCIgeT0iLTUwIiB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) !important;
+    background : -moz-radial-gradient(center, ellipse cover, rgba(69, 72, 77, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%) !important;
+    background : -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(69, 72, 77, 0.9)), color-stop(100%, rgba(40, 40, 40, 0.9))) !important;
+    background : -webkit-radial-gradient(center, ellipse cover, rgba(69, 72, 77, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%) !important;
+    background : -o-radial-gradient(center, ellipse cover, rgba(69, 72, 77, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%) !important;
+    background : -ms-radial-gradient(center, ellipse cover, rgba(69, 72, 77, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%) !important;
+    background : radial-gradient(ellipse at center, rgba(69, 72, 77, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%) !important;
+    filter : progid:DXImageTransform.Microsoft.gradient(startColorstr='#45484d', endColorstr='#282828', GradientType=1) !important;
+    -webkit-box-shadow : 1px 1px 8px 0 #000 !important;
+    box-shadow : 1px 1px 8px 0 #000 !important;
+}
+#mCalculate a {
+    display : block !important;
+}
+.fsdark {
+    width : 100%;
+    height : 100%;
+    position : absolute;
+    top : 0;
+    left : 0;
+    background-color : rgba(0, 0, 0, 0.6) !important;
+    z-index : 1
+}
+table {
+    color : #DDD !important;
+}
+table a {
+    color : #FF8A00 !important;
+    text-shadow : 1px 1px 0px #000 !important;
+}
+td {
+    padding : 5px !important;
+}
+tr {
+    background : transparent;
+    !important;
+    border-top : 1px solid #333;
+    border-bottom : 1px solid #252525;
+}
+tr:nth-child(odd) {
+    background : rgba(0, 0, 0, 0.15) !important;
+}
+span.won {
+    color : #8EC13E !important;
+    background : rgba(0, 0, 0, .5);
+    !important;
+    -webkit-border-radius : 3px;
+    -moz-border-radius : 3px;
+    border-radius : 3px;
+    text-shadow : 0px 0px 5px #000 !important;
+    font-weight : bold !important;
+    padding : 3px 8px;
+}
+span.lost {
+    color : #D12121 !important;
+    background : rgba(0, 0, 0, .5);
+    !important;
+    -webkit-border-radius : 3px;
+    -moz-border-radius : 3px;
+    border-radius : 3px;
+    text-shadow : 0px 0px 5px #000 !important;
+    font-weight : bold !important;
+    padding : 3px 8px;
+}
+/*Match Page*/
+ .betheader {
+    font-size : 1.0em;
+    margin : 0 !important;
+    padding : 4px 6px !important;
+    width : 100% !important;
+    float : left;
+}
+/*Preview Item*/
+ .rarity:hover {
+    cursor : pointer;
+    font-size : 0.65em !important;
+}
+.lc-big-preview {
+    padding : 20px;
+    position : fixed;
+    display : table-cell;
+    vertical-align : middle;
+    top : calc(50% - (404px/2));
+    right : calc(50% - (532px/2));
+    height : 384px;
+    width : 512px;
+    -webkit-border-radius : 5px;
+    -moz-border-radius : 5px;
+    border-radius : 5px;
+    border : 10px solid #000;
+    z-index : 999 !important;
+    background : rgba(193, 193, 193, 0.8) !important;
+    background : -moz-radial-gradient(center, ellipse cover, rgba(193, 193, 193, 0.95) 0%, rgba(109, 109, 109, 0.8) 90%) !important;
+    background : -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(193, 193, 193, 0.95)), color-stop(100%, rgba(109, 109, 109, 0.8))) !important;
+    background : -webkit-radial-gradient(center, ellipse cover, rgba(193, 193, 193, 0.95) 0%, rgba(109, 109, 109, 0.8) 90%) !important;
+    background : -o-radial-gradient(center, ellipse cover, rgba(193, 193, 193, 0.95) 0%, rgba(109, 109, 109, 0.8) 90%) !important;
+    background : -ms-radial-gradient(center, ellipse cover, rgba(193, 193, 193, 0.95) 0%, rgba(109, 109, 109, 0.8) 90%) !important;
+    background : radial-gradient(ellipse at center, rgba(193, 193, 193, 0.95) 0%, rgba(109, 109, 109, 0.8) 90%) !important;
+    filter : progid:DXImageTransform.Microsoft.gradient(startColorstr='#c1c1c1', endColorstr='#6d6d6d', GradientType=1) !important;
+}
+.lc-big-preview-bg {
+    position : absolute;
+    background : rgba(0, 0, 0, 0.75) !important;
+    width : 100%;
+    height : 100%;
+    top : 0;
+    left : 0;
+    z-index : 190 !important;
+}
+.lc-preview-title {
+    font-weight : bold;
+    text-shadow : 0px 0px 4px #000;
+    /*text-transform: uppercase;*/
+    font-size : 0.95em;
+    position : absolute;
+    left : 10px;
+    bottom : 10px;
+}
+.lc-preview-img {
+    position : absolute;
+    margin : auto;
+    top : 0;
+    left : 0;
+    right : 0;
+    bottom : 0;
+}
+.box-shiny-alt, .box-shiny {
+    background : transparent !important;
+    box-shadow : none !important;
+    border : none !important;
+}
+/*New Quality*/
+ .Common {
+    box-shadow: rgba(176, 195, 217, 0.95) 0 2px 15px inset;
+}
+.Uncommon {
+    box-shadow: rgba(94, 152, 217, 0.95) 0 2px 15px inset;
+}
+.Rare {
+    box-shadow: rgba(75, 105, 255, 0.95) 0 2px 15px inset;
+}
+.Mythical {
+    box-shadow: rgba(136, 71, 255, 0.95) 0 2px 15px inset;
+}
+.Legendary {
+    box-shadow: rgba(211, 44, 230, 0.95) 0 2px 15px inset;
+}
+.Ancient {
+    box-shadow: rgba(235, 75, 75, 0.95) 0 2px 15px inset;
+}
+.Immortal {
+    box-shadow: rgba(228, 174, 57, 0.95) 0 2px 15px inset;
+}
+.Arcana {
+    box-shadow: rgba(173, 229, 92, 0.95) 0 2px 15px inset;
+}
+.Consumer, .Base {
+    box-shadow : 0 2px 15px rgba(176, 195, 217, 0.5) inset !important;
+}
+.Industrial {
+    box-shadow : 0 2px 15px rgba(94, 152, 217, 0.5) inset !important;
+}
+.Mil-Spec {
+    box-shadow : 0 2px 15px rgba(75, 105, 255, 0.5) inset !important;
+}
+.Restricted {
+    box-shadow : 0 2px 15px rgba(136, 71, 255, 0.5) inset !important;
+}
+.Classified {
+    box-shadow : 0 2px 15px rgba(211, 44, 230, 0.5) inset !important;
+}
+.Covert, .Extraordinary {
+    box-shadow : 0 2px 15px rgba(235, 75, 75, 0.5) inset !important;
+}
+/*Tabs*/
+ .tab {
+    /*float                 : left;*/
+    /*width                 : 100% !important;*/
+    /*text-align            : center;*/
+    background-color : rgba(0, 0, 0, 0.9) !important;
+    font-weight : bold;
+    /*font-size             : 16px !important;*/
+    color : #FFF !important;
+    border-bottom : 1px solid #333 !important;
+    /*-webkit-border-radius : 0px !important;*/
+    /*-moz-border-radius    : 0px !important;*/
+    /*border-radius         : 0px !important;*/
+    /*padding               : 6px 0 !important;*/
+    line-height : 2em;
+    /*box-shadow            : none !important;*/
+}
+/*.tab:hover {*/
+
+/*background : rgba(255, 255, 255, 0.05) !important;*/
+
+/*}*/
+
+/*#yplayer {*/
+
+/*margin-top : 30px !important;*/
+
+/*}*/
+
+/*Media Queries*/
+ @media screen and (max-width : 1400px) {
+    #submenu {
+        display : none;
+    }
+    #main {
+        margin-left : 0px !important;
+    }
+}
+@media screen and (max-width : 1100px) {
+    #submenu {
+        display : none;
+    }
+    #main {
+        margin-left : 0px !important;
+    }
+    section.box {
+        width : calc(100% - 80px) !important;
+    }
+}
+/*New stuff*/
+ #switch_accounts_ui {
+    position : absolute;
+    top : -1000px;
+    left : -1000px;
+}
+#switch_accounts_ui {
+    padding : 5px 5px 2px 5px;
+    float : left;
+    color : #CCC;
+    border-radius : 5px;
+    box-shadow : 0px 1px 2px #888;
+    background : -webkit-linear-gradient(bottom, #4B4B4B 0%, #252525 100%);
+}
+.sa_account {
+    cursor : pointer;
+    height : 40px;
+    color : #252525;
+    border-radius : 5px;
+    margin : 5px 0px 5px 0px;
+    padding : 2px;
+    box-shadow : 0px 1px 2px #888;
+    background : #D7D7D7
+}
+.sa_account.logged {
+    border : 2px solid #FF8A00 !important;
+}
+.sa_account.active {
+    border : 2px solid #FFF;
+}
+.sa_account.notactive {
+    border : 2px solid #CCC;
+}
+.sa_account .sa_avatar {
+    float : left;
+}
+.sa_account .sa_avatar img {
+    height : 40px;
+}
+.sa_account .sa_meta {
+    margin-left : 50px;
+}
+.sa_account .sa_meta .sa_name {
+    height : 20px;
+    font-size : 20px;
+    padding-right : 5px;
+}
+.sa_account .sa_meta .sa_steamid {
+    height : 12px;
+    font-size : 12px;
+    padding-right : 5px;
+}
+.sa_clear {
+    font-size : 12px;
+    cursor : pointer
+}
+.lc-calc-button {
+    -moz-box-shadow : 0px 1px 0px 0px #000;
+    -webkit-box-shadow : 0px 1px 0px 0px #000;
+    box-shadow : 0px 1px 0px 0px #000;
+    background : -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #333), color-stop(1, #1A1A1A));
+    background : -moz-linear-gradient(top, #333 5%, #1A1A1A 100%);
+    background : -webkit-linear-gradient(top, #333 5%, #1A1A1A 100%);
+    background : -o-linear-gradient(top, #333 5%, #1A1A1A 100%);
+    background : -ms-linear-gradient(top, #333 5%, #1A1A1A 100%);
+    background : linear-gradient(to bottom, #333 5%, #1A1A1A 100%);
+    filter : progid:DXImageTransform.Microsoft.gradient(startColorstr='#333333', endColorstr='#1a1a1a', GradientType=0);
+    background-color : #333;
+    -moz-border-radius : 3px;
+    -webkit-border-radius : 3px;
+    border-radius : 3px;
+    border : 1px solid #000;
+    display : inline-block;
+    cursor : pointer;
+    color : #FFF;
+    font-family : Arial;
+    font-size : 11px;
+    font-weight : bold;
+    padding : 2px 8px;
+    text-decoration : none;
+    text-shadow : 0px 0px 4px #000;
+}
+.lc-calc-button:hover {
+    background : -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #1A1A1A), color-stop(1, #333));
+    background : -moz-linear-gradient(top, #1A1A1A 5%, #333 100%);
+    background : -webkit-linear-gradient(top, #1A1A1A 5%, #333 100%);
+    background : -o-linear-gradient(top, #1A1A1A 5%, #333 100%);
+    background : -ms-linear-gradient(top, #1A1A1A 5%, #333 100%);
+    background : linear-gradient(to bottom, #1A1A1A 5%, #333 100%);
+    filter : progid:DXImageTransform.Microsoft.gradient(startColorstr='#1a1a1a', endColorstr='#333333', GradientType=0);
+    background-color : #1A1A1A;
+}
+.lc-calc-button:active {
+    position : relative;
+    top : 1px;
+}

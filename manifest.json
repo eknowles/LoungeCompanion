@@ -1,0 +1,58 @@
+{
+    "manifest_version": 2,
+
+    "name": "Lounge Companion (Dota 2 & CS:GO)",
+    "short_name": "Lounge Companion",
+    "description": "Lounge Companion adds more functionality and offers an enhanced user experience for csgolounge.com and dota2lounge.com",
+    "version": "3.2.1",
+    "icons": {
+        "128": "img/128x128.png"
+    },
+    "options_page": "settings.html",
+    "permissions": [
+        "storage",
+        "cookies",
+        "notifications",
+        "http://csgolounge.com/",
+        "http://dota2lounge.com/",
+        "http://steamcommunity.com/"
+    ],
+    "web_accessible_resources": [
+        "img/spin.gif",
+        "img/stattrak-icon.png",
+        "img/stattrak-icon-big.png",
+        "img/souvenir-icon.png",
+        "img/souvenir-icon-big.png",
+        "js/lib/jquery-2.1.0.min.js",
+        "js/lib/jquery.tinysort.min.js",
+        "js/lib/jquery.tablesorter.min.js",
+        "js/lib/jquery.cookie.js",
+        "js/lib/signin.js",
+        "js/main.js"
+    ],
+    "browser_action": {
+        "default_icon": {
+            "19": "img/icons/19.png",
+            "38": "img/icons/38.png"
+        },
+        "default_title": "CSGO Lounge Settings",
+        "default_popup": "settings.html"
+    },
+    "content_scripts": [{
+        "matches": [
+            "http://csgolounge.com/*",
+            "http://dota2lounge.com/*"
+        ],
+        "css": [
+            "css/lib/font-awesome.min.css",
+            "css/main.css"
+        ],
+        "js": [
+            "js/lib/jquery-2.1.0.min.js",
+            "js/lib/jquery.tinysort.min.js",
+            "js/lib/jquery.cookie.js",
+            "js/lib/signin.js",
+            "js/main.js"
+        ]
+    }]
+}

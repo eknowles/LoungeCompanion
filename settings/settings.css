@@ -1,0 +1,10 @@
+body {
+    width: 600px;
+    padding-top: 0px;
+}
+.settings-body {
+    padding: 5px 5px;
+}
+.tab-pane {
+	/*min-width: 600px;*/
+}
