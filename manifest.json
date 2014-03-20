@@ -4,7 +4,7 @@
     "name": "Lounge Companion (Dota 2 & CS:GO)",
     "short_name": "Lounge Companion",
     "description": "Lounge Companion adds more functionality and offers an enhanced user experience for csgolounge.com and dota2lounge.com",
-    "version": "3.2.2",
+    "version": "3.3",
     "icons": {
         "128": "img/128x128.png"
     },
