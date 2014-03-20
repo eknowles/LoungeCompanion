@@ -383,7 +383,8 @@ $(document).ready(function () {
 
     //    $('#placebut').after('<a class="lc-button" id="lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
 });
+
 $(window).resize(function () {
-    setItemWidth();
+//    setItemWidth(); //// Updated every 3 seconds anyway, so removed
     updatePreviewBG();
 });
