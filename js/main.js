@@ -162,10 +162,38 @@ function setItemWidth() {
     $(".item").each(function (index) {
         var item = $(this);
         var parentWidth = item.parent().width();
-        var itemRowCount = 4;
+        var itemRowCount = 7;
         var newItemWidth = (parentWidth / itemRowCount) - 9;
         parentClass = item.parent().attr('class');
         parentId = item.parent().attr('id');
+        if (item.parent().next().attr('#freezeback')){
+            console.log(item);
+        }
+        if (parentId) {
+            switch (parentId) {
+                case 'backpack':
+                    itemRowCount = 7;
+                    break;
+                case 'armory':
+                    itemRowCount = 7;
+                    break;
+                case 'trash':
+                    itemRowCount = 7;
+                    break;
+                case 'itemlist':
+                    itemRowCount = 7;
+                    break;
+                case 'bpheader':
+                    itemRowCount = 7;
+                    break;
+                case 'freezeback':
+                    itemRowCount = 7;
+                    break;
+                default:
+                    itemRowCount = 7;
+                    break;
+            }
+        }
         if (parentClass) {
             switch (parentClass) {
                 case 'winsorloses':
@@ -188,28 +216,7 @@ function setItemWidth() {
                     break;
             }
         }
-        if (parentId) {
-            switch (parentId) {
-                case 'backpack':
-                    itemRowCount = 7;
-                    break;
-                case 'armory':
-                    itemRowCount = 7;
-                    break;
-                case 'trash':
-                    itemRowCount = 7;
-                    break;
-                case 'itemlist':
-                    itemRowCount = 7;
-                    break;
-                case 'bpheader':
-                    itemRowCount = 7;
-                    break;
-                default:
-                    itemRowCount = 7;
-                    break;
-            }
-        }
+
         //backpack || 'armory' || 'trash' || 'itemlist' || 'bpheader'
         // if (item.parent().hasClass('bpheader')) {
         //     itemRowCount = 7;
@@ -238,16 +245,13 @@ function setItemWidth() {
         // $delayFadeIn += 10;
     });
 }
-// Add donation button to first box of every page
-$('section.box').first().append('<a class="lc-button" id="lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
-
 // If page is match page
 if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
     // TODO
 }
 // If page is mybets
 if ($(location).attr('href').endsWith('mybets')) {
-    $('#freezebutton').after('<a class="lc-button" id="lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
+    $('#freezebutton').after('<a class="lc-button lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
     var $currentBets = $('.lc-current-bets');
     $('.match').toggleClass('match').toggleClass('lc-current-bets');
     $('.matchmain').addClass('winsorloses');
@@ -373,7 +377,11 @@ $(document).ready(function () {
         closePreview();
     });
     updatePreviewBG();
-    $('#placebut').after('<a class="lc-button" id="lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
+
+    // Add donation button to first box of every page
+    $('section.box').first().append('<a class="lc-button lc-donate dullhover" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
+
+    //    $('#placebut').after('<a class="lc-button" id="lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
 });
 $(window).resize(function () {
     setItemWidth();

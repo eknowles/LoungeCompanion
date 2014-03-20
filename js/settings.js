@@ -3,11 +3,6 @@ function save_options() {
     var background = $('#backgrounds').val();
 
     chrome.storage.local.set({'backgroundImage': background}, function () {
-        $('#status').fadeIn(800, function () {
-            setTimeout(function () {
-                $('#status').fadeOut(400);
-            }, 2000);
-        });
     });
 }
 // Resets bg options to localStorage.
@@ -16,11 +11,6 @@ function reset_options() {
 
     chrome.storage.local.set({'backgroundImage': background}, function () {
         $("#backgrounds").val(background);
-        $('#status').fadeIn(800, function () {
-            setTimeout(function () {
-                $('#status').fadeOut(400);
-            }, 2000);
-        });
     });
 }
 // Restores select box state to saved value from localStorage.

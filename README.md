@@ -3,7 +3,7 @@ LoungeCompanion
 
 Google Chrome Extension for csgolounge.com and dota2lounge.com
 
-Install Via Google Webstore
+Install Via Google Web Store
 https://chrome.google.com/webstore/detail/pokidbfaabncipciiigfhncfmgmdjdaj/
 
 Support Reddit
