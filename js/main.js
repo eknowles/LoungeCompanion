@@ -326,7 +326,7 @@ $(".rarity").click(function () {
 });
 function addSideMenuOptions() {
     $('nav#submenu>div').first().before(
-        '<div class="lc-sidebar_menu"><i class="fa fa-bars"></i>' +
+        '<div class="lc-sidebar_menu"><i class="fa fa-bars"></i></div>' +
         '<div><a href="myprofile"><i class="fa fa-user"></i> My Profile</a>' +
         '<a href="mytrades"><i class="fa fa-exchange"></i> My Trades</a>' +
         '<a href="myoffers"><i class="fa fa-bullhorn"></i> My Offers</a>' +
