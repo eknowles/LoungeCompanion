@@ -102,19 +102,19 @@ section.box {
     width : 100% !important;
 }
 .item .smallimg {
-	overflow: hidden !important;
-	margin-left: 0 !important;
-	margin-top: 0 !important;
+    overflow: hidden !important;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
     margin-right: 0 !important;
     margin-bottom: 0 !important;
 }
 img.smallimg:hover
 {
-	filter: saturate(100%);
-	-webkit-filter: saturate(100%);
-	-moz-filter: saturate(100%);
-	-o-filter: saturate(100%);
-	-ms-filter: saturate(100%);
+    filter: saturate(100%);
+    -webkit-filter: saturate(100%);
+    -moz-filter: saturate(100%);
+    -o-filter: saturate(100%);
+    -ms-filter: saturate(100%);
 }
 #mCalculate > .bpheader {
     margin-bottom : 10px;
@@ -358,8 +358,8 @@ a.lc-button {
     top: 100%;
 }
 div.name a {
-	color: #ff8a00 !important;
-	text-shadow: 0px 0px 1px #000;
+    color: #ff8a00 !important;
+    text-shadow: 0px 0px 1px #000;
 }
 .whenm {
     font-weight : bold !important;
@@ -410,6 +410,7 @@ div.name a {
 }
 .lc-sidemenu {
     z-index : 1000;
+
 }
 .matchmain .winsorloses {
     padding : 6px !important;
@@ -443,12 +444,12 @@ div.name a {
     width : 100% !important;
 }
 .donor {
-	color: #5E98D9 !important;
-	text-shadow: none !important;
-	background: url(../img/donor.png) no-repeat left;
+    color: #5E98D9 !important;
+    text-shadow: none !important;
+    background: url(../img/donor.png) no-repeat left;
 }
 .item .rarity {
-	margin-top: -5px !important;
+    margin-top: -5px !important;
     color : #DDD !important;
     text-shadow : 1px 1px 0px #000 !important;
     background : none !important;
@@ -606,10 +607,10 @@ div.name a {
     padding : 0 !important;
 }
 .dullhover {
-	opacity: 0.5;
+    opacity: 0.5;
 }
 .dullhover:hover {
-	opacity: 1;
+    opacity: 1;
 }
 #profile #avatar {
     margin : 0em 20px 20px 0 !important;
@@ -841,11 +842,35 @@ span.lost {
 /*margin-top : 30px !important;*/
 
 /*}*/
-
+    #submenu {
+        display : block !important;
+    }
 /*Media Queries*/
  @media screen and (max-width : 1400px) {
     #submenu {
-        display : none;
+        z-index: 1001;
+        position: absolute;
+        clear: both;
+        float:left;
+        margin-left:-201px;
+        background: rgba(41,41,41,1) !important;
+        transition:margin-left 800ms cubic-bezier(.17,.67,.28,.97);
+    }
+    .lc-sidebar_menu {
+        position: relative;
+    }
+    .lc-sidebar_menu i.fa-bars {
+        font-size: 30px;
+        cursor: pointer;
+        position: absolute;
+        right: -47px;
+        top: 43px;
+        padding: 10px;
+        background: rgba(41, 41, 41, 1);
+        box-shadow: 2px 2px 3px 0px #111;
+    }
+    #submenu.open {
+        margin-left:0;
     }
     #main {
         margin-left : 0px !important;

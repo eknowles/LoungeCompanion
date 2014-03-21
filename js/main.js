@@ -325,7 +325,9 @@ $(".rarity").click(function () {
     openPreview($(this));
 });
 function addSideMenuOptions() {
-    $('nav#submenu>div').first().before('<div><a href="myprofile"><i class="fa fa-user"></i> My Profile</a>' +
+    $('nav#submenu>div').first().before(
+        '<div class="lc-sidebar_menu"><i class="fa fa-bars"></i>' +
+        '<div><a href="myprofile"><i class="fa fa-user"></i> My Profile</a>' +
         '<a href="mytrades"><i class="fa fa-exchange"></i> My Trades</a>' +
         '<a href="myoffers"><i class="fa fa-bullhorn"></i> My Offers</a>' +
         '<a href="mybets"><i class="fa fa-money"></i> My Bets</a>' +
@@ -382,9 +384,13 @@ $(document).ready(function () {
     $('section.box').first().append('<a class="lc-button lc-donate dullhover" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
 
     //    $('#placebut').after('<a class="lc-button" id="lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
-});
 
+    //Sidebar slideout
+    $('.lc-sidebar_menu').click(function() {
+        $('#submenu').toggleClass('open');
+    });
+});
 $(window).resize(function () {
-//    setItemWidth(); //// Updated every 3 seconds anyway, so removed
+    setItemWidth();
     updatePreviewBG();
 });
