@@ -7,4 +7,5 @@ body {
 }
 .tab-pane {
 	/*min-width: 600px;*/
+	padding-top: 20px;
 }
