@@ -46,15 +46,15 @@ $("#authme").click(
             } else {
                 console.log('Token acquired:'+token+
                     '. See chrome://identity-internals for details.');
-                checkLicence(token);
-
+                setToken(token);
+                getLicence(token);
             }
         });
         // @corecode_end getAuthToken
     }
 );
 
-function checkLicence(token){
+function getLicence(token){
     var CWS_LICENSE_API_URL = 'https://www.googleapis.com/chromewebstore/v1.1/userlicenses/';
     var req = new XMLHttpRequest();
     req.open('GET', CWS_LICENSE_API_URL + chrome.runtime.id);
@@ -63,9 +63,34 @@ function checkLicence(token){
         if (req.readyState == 4) {
             var license = JSON.parse(req.responseText);
             console.log(license);
+            verifyAndSaveLicense(license);
         }
     };
     req.send();
+}
+function setToken(token){
+    chrome.storage.sync.set({'userToken': token}, function() {
+    });
+}
+function verifyAndSaveLicense(license){
+    var licenseStatus;
+    if (license.result && license.accessLevel == "FULL") {
+        console.log("Fully paid & properly licensed.");
+        licenseStatus = "FULL";
+    } else if (license.result && license.accessLevel == "FREE_TRIAL") {
+        var daysAgoLicenseIssued = Date.now() - parseInt(license.createdTime, 10);
+        daysAgoLicenseIssued = daysAgoLicenseIssued / 1000 / 60 / 60 / 24;
+        if (daysAgoLicenseIssued <= 3) {
+            console.log("Free trial, still within trial period");
+            licenseStatus = "FREE_TRIAL";
+        } else {
+            console.log("Free trial, trial period expired.");
+            licenseStatus = "FREE_TRIAL_EXPIRED";
+        }
+    } else {
+        console.log("No license ever issued.");
+        licenseStatus = "NONE";
+    }
 }
 document.querySelector('#saving').addEventListener('click', save_options);
 document.querySelector('#reset').addEventListener('click', reset_options);

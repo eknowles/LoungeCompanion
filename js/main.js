@@ -1,9 +1,8 @@
 var $body = $('body');
-
 $body.prepend('<div class="lc-big-preview" style="display: none;"><img src="" alt="" class="lc-preview-img" /><img src="" alt="" class="lc-preview-stattrak" /><img src="" alt="" class="lc-preview-souvenir" /><div class="lc-preview-title"></div><a href="" target="_blank" class="lc-preview-steamlink lc-button">Open Steam Market Page</a></div>');
 $body.prepend('<div class="lc-big-preview-bg" style="display: none;"><img src="" alt="Loading..." class="lc-preview-spinner" /><div id="countdown"></div></div>');
 $body.prepend('<div class="lc-bet" style="display: none;"></div>');
-
+$body.prepend('<div class="lc-wall" style=""><div class="lc-wall-inside" style=""><h2>Text</h2></div></div>');
 if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (str) {
         return str.length > 0 && this.substring(0, str.length) === str;
@@ -16,7 +15,7 @@ if (typeof String.prototype.endsWith != 'function') {
 }
 chrome.storage.local.get("backgroundImage", function (fetchedData) {
     bg = fetchedData.backgroundImage
-    document.body.style.backgroundImage="url(http://cdn.steamcommunity.com/economy/image/" + bg + ")";
+    document.body.style.backgroundImage = "url(http://cdn.steamcommunity.com/economy/image/" + bg + ")";
 });
 var gameid = ''; // csgo 730, dota2 570
 if ($(location).attr('href').startsWith('http://csgolounge.com/')) {
@@ -166,7 +165,7 @@ function setItemWidth() {
         var newItemWidth = (parentWidth / itemRowCount) - 9;
         parentClass = item.parent().attr('class');
         parentId = item.parent().attr('id');
-        if (item.parent().next().attr('#freezeback')){
+        if (item.parent().next().attr('#freezeback')) {
             console.log(item);
         }
         if (parentId) {
@@ -216,7 +215,6 @@ function setItemWidth() {
                     break;
             }
         }
-
         //backpack || 'armory' || 'trash' || 'itemlist' || 'bpheader'
         // if (item.parent().hasClass('bpheader')) {
         //     itemRowCount = 7;
@@ -327,14 +325,14 @@ $(".rarity").click(function () {
 function addSideMenuOptions() {
     $('nav#submenu>div').first().before(
         '<div class="lc-sidebar_menu"><i class="fa fa-bars"></i></div>' +
-        '<div><a href="myprofile"><i class="fa fa-user"></i> My Profile</a>' +
-        '<a href="mytrades"><i class="fa fa-exchange"></i> My Trades</a>' +
-        '<a href="myoffers"><i class="fa fa-bullhorn"></i> My Offers</a>' +
-        '<a href="mybets"><i class="fa fa-money"></i> My Bets</a>' +
-        '<a href="bookmarks"><i class="fa fa-bookmark"></i> Bookmarks</a>' +
-        '<a href="search"><i class="fa fa-search"></i> Search</a>' +
-        '<a href="addtrade"><i class="fa fa-plus"></i> Add Trade</a></div>' +
-        '<div><a class="UpdateItemsAll"><i class="fa fa-bolt"></i> Refresh Items</a></div>');
+            '<div><a href="myprofile"><i class="fa fa-user"></i> My Profile</a>' +
+            '<a href="mytrades"><i class="fa fa-exchange"></i> My Trades</a>' +
+            '<a href="myoffers"><i class="fa fa-bullhorn"></i> My Offers</a>' +
+            '<a href="mybets"><i class="fa fa-money"></i> My Bets</a>' +
+            '<a href="bookmarks"><i class="fa fa-bookmark"></i> Bookmarks</a>' +
+            '<a href="search"><i class="fa fa-search"></i> Search</a>' +
+            '<a href="addtrade"><i class="fa fa-plus"></i> Add Trade</a></div>' +
+            '<div><a class="UpdateItemsAll"><i class="fa fa-bolt"></i> Refresh Items</a></div>');
     $('#submenu').css({
         'height': ($(document).height() - $('header').height()) + 'px'
     });
@@ -379,14 +377,11 @@ $(document).ready(function () {
         closePreview();
     });
     updatePreviewBG();
-
     // Add donation button to first box of every page
     $('section.box').first().append('<a class="lc-button lc-donate dullhover" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
-
     //    $('#placebut').after('<a class="lc-button" id="lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
-
     //Sidebar slideout
-    $('.lc-sidebar_menu').click(function() {
+    $('.lc-sidebar_menu').click(function () {
         $('#submenu').toggleClass('open');
     });
 });
