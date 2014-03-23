@@ -1,14 +1,12 @@
 // Saves options to localStorage.
 function save_options() {
     var background = $('#backgrounds').val();
-
     chrome.storage.local.set({'backgroundImage': background}, function () {
     });
 }
 // Resets bg options to localStorage.
 function reset_options() {
     var background = 'xJFAJwB220HYP78WfVEW3nzdipZEBtUBDPFsDJm3XnkNmnfcWWqdU3jmo-hbMVhUcciThRFElxkH_HEUmLRffgCeZJxHYo5Rebvv7kJ7RlM7ns3WUUycWwr3MVnT9xsuCJEygx03jFR9-KaxD38bGSSYmodKG81VWaUzWYLqQGwL';
-
     chrome.storage.local.set({'backgroundImage': background}, function () {
         $("#backgrounds").val(background);
     });
@@ -22,7 +20,11 @@ function restore_options() {
 }
 $(document).ready(function () {
     restore_options();
-    $("#dTable").tablesorter({ sortList: [[2,1], [3,1], [1,1]] });
+    $("#dTable").tablesorter({ sortList: [
+        [2, 1],
+        [3, 1],
+        [1, 1]
+    ] });
 });
 document.querySelector('#saving').addEventListener('click', save_options);
 document.querySelector('#reset').addEventListener('click', reset_options);

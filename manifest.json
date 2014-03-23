@@ -1,22 +1,29 @@
 {
     "manifest_version": 2,
-
     "name": "Lounge Companion (Dota 2 & CS:GO)",
     "short_name": "Lounge Companion",
-    "description": "Lounge Companion adds more functionality and offers an enhanced user experience for csgolounge.com and dota2lounge.com",
-    "version": "3.3",
+    "description": "Never lose another bet!",
+    "version": "3.4.1",
     "icons": {
         "128": "img/128x128.png"
     },
     "options_page": "settings.html",
     "permissions": [
         "storage",
+        "identity",
         "cookies",
         "notifications",
         "http://csgolounge.com/",
         "http://dota2lounge.com/",
         "http://steamcommunity.com/"
     ],
+    "oauth2": {
+        "client_id": "920642326718.apps.googleusercontent.com",
+        "scopes": [
+            "https://www.googleapis.com/auth/plus.login",
+            "https://www.googleapis.com/auth/chromewebstore.readonly"
+        ]
+    },
     "web_accessible_resources": [
         "img/spin.gif",
         "img/stattrak-icon.png",
@@ -30,6 +37,9 @@
         "js/lib/signin.js",
         "js/main.js"
     ],
+    "background": {
+        "scripts": ["background.js"]
+    },
     "browser_action": {
         "default_icon": {
             "19": "img/icons/19.png",
