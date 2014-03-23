@@ -3,7 +3,7 @@
     "name": "Lounge Companion (Dota 2 & CS:GO)",
     "short_name": "Lounge Companion",
     "description": "The best community addon for csgolounge.com and dota2lounge.com",
-    "version": "3.4.5",
+    "version": "3.4.6",
     "icons": {
         "128": "img/128x128.png"
     },

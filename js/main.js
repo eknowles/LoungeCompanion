@@ -244,7 +244,7 @@ function setItemWidth() {
 }
 // If page is match page
 if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
-    $('section.box').first().next().prepend('<div id="disqus_thread"></div>');
+    $('section.box').first().next().find('.gradient').append('<div id="disqus_thread"></div>');
     /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
     var disqus_shortname = 'loungecompanion'; // required: replace example with your forum shortname
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

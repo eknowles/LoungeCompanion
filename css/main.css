@@ -1000,12 +1000,27 @@ span.lost {
 	position: relative;
 	margin: 0 0 0 60px;
 	-webkit-appearance: none;
-	background: #FFF;
-	border: 2px solid #CBD2D6;
-	border: 2px solid rgba(0, 39, 59, 0.2);
+	background: #333 !important;
+	border: 2px solid rgba(255, 138, 0, 0.5) !important;
 	border-radius: 4px;
+}
+#disqus_thread .textarea-wrapper .textarea {
+	color: #A6E1EC !important;
 }
 #disqus_thread a {
 	color: #FF8A00;
 	text-decoration: none;
+}
+#disqus_thread .badge {
+	color: #FFF;
+	background: #428BCA !important;
+	padding: 2px 4px;
+	font-size: 10px;
+	line-height: 1.1;
+	font-weight: 700;
+	border-radius: 3px;
+	display: inline-block;
+	position: relative;
+	top: -1px;
+	left: 1px;
 }
