@@ -25,34 +25,28 @@ $(document).ready(function () {
         [3, 1],
         [1, 1]
     ] });
-    chrome.identity.getAuthToken({ 'interactive': false },function (token) {
-        //            alert("back token=" + token);
-        console.log(token);
-        console.log("Identity:", chrome.identity);
-    });
+    interactiveSignIn();
 });
-$("#authme").click(
-    function interactiveSignIn() {
-        // @corecode_begin getAuthToken
-        // @description This is the normal flow for authentication/authorization
-        // on Google properties. You need to add the oauth2 client_id and scopes
-        // to the app manifest. The interactive param indicates if a new window
-        // will be opened when the user is not yet authenticated or not.
-        // @see http://developer.chrome.com/apps/app_identity.html
-        // @see http://developer.chrome.com/apps/identity.html#method-getAuthToken
-        chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-            if (chrome.runtime.lastError) {
-                console.log(chrome.runtime.lastError);
-            } else {
-                console.log('Token acquired:'+token+
-                    '. See chrome://identity-internals for details.');
-                setToken(token);
-                getLicence(token);
-            }
-        });
-        // @corecode_end getAuthToken
-    }
-);
+function interactiveSignIn() {
+    // @corecode_begin getAuthToken
+    // @description This is the normal flow for authentication/authorization
+    // on Google properties. You need to add the oauth2 client_id and scopes
+    // to the app manifest. The interactive param indicates if a new window
+    // will be opened when the user is not yet authenticated or not.
+    // @see http://developer.chrome.com/apps/app_identity.html
+    // @see http://developer.chrome.com/apps/identity.html#method-getAuthToken
+    chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+        if (chrome.runtime.lastError) {
+            console.log(chrome.runtime.lastError);
+        } else {
+            console.log('Token acquired:'+token+
+                '. See chrome://identity-internals for details.');
+            setToken(token);
+            getLicence(token);
+        }
+    });
+    // @corecode_end getAuthToken
+}
 
 function getLicence(token){
     var CWS_LICENSE_API_URL = 'https://www.googleapis.com/chromewebstore/v1.1/userlicenses/';

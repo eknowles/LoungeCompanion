@@ -2,7 +2,6 @@ var $body = $('body');
 $body.prepend('<div class="lc-big-preview" style="display: none;"><img src="" alt="" class="lc-preview-img" /><img src="" alt="" class="lc-preview-stattrak" /><img src="" alt="" class="lc-preview-souvenir" /><div class="lc-preview-title"></div><a href="" target="_blank" class="lc-preview-steamlink lc-button">Open Steam Market Page</a></div>');
 $body.prepend('<div class="lc-big-preview-bg" style="display: none;"><img src="" alt="Loading..." class="lc-preview-spinner" /><div id="countdown"></div></div>');
 $body.prepend('<div class="lc-bet" style="display: none;"></div>');
-$body.prepend('<div class="lc-wall" style=""><div class="lc-wall-inside" style=""><h2>Text</h2></div></div>');
 if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (str) {
         return str.length > 0 && this.substring(0, str.length) === str;
@@ -245,8 +244,14 @@ function setItemWidth() {
 }
 // If page is match page
 if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
-    // TODO
-}
+    $('section.box').first().next().prepend('<div id="disqus_thread"></div>');
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'loungecompanion'; // required: replace example with your forum shortname
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+
+    }
 // If page is mybets
 if ($(location).attr('href').endsWith('mybets')) {
     $('#freezebutton').after('<a class="lc-button lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
