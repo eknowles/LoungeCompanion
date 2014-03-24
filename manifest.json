@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
-    "name": "Lounge Companion (Dota 2 & CS:GO)",
+    "name": "Lounge Companion PUBLIC VERSION",
     "short_name": "Lounge Companion",
     "description": "The best community addon for csgolounge and dota2lounge",
-    "version": "3.4.6",
+    "version": "3.5",
     "icons": {
         "128": "img/128x128.png"
     },
@@ -17,7 +17,6 @@
         "https://www.googleapis.com/*",
         "http://steamcommunity.com/"
     ],
-    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjEtZ1DMuGTsAQCHmXbXemVws9kKLNfqLYtTcmXuaYG2th+478ieoS8G9S+129bpXCLJFmDfHX5QlX8J6ikFKcUnnOrIrl04Ozfhk56z3j+C9w0si/AAidp0RK7lOonkNI5voqKFURtPVCTL2lj0d1a36sqm1vVNLDLawzUaWHf0oxq2MyeF34F8ufbDhx2xveeTKL1MxGzcRk2C4JwM0guh8uGUEYOYYlaXfjH7pzNN6fk+C85QsDqRXPJ3XHQMUIUH5TvzQ8mzMwF7TgvBRwWlCdz8MDTk9xZucoIGE5OJWaeSPaqfoiH2l38UDGMv1JWA9Hs4wYwxGyqoPdx26XQIDAQAB",
     "oauth2": {
         "client_id": "920642326718-67ol845j1otp18blo54rb5m2ff5s15lc.apps.googleusercontent.com",
         "scopes": [
