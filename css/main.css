@@ -1024,3 +1024,6 @@ span.lost {
 	top: -1px;
 	left: 1px;
 }
+.overlay.active .mask {
+	background: rgba(0, 0, 0, 0.8) !important;
+}
