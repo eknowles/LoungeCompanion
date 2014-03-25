@@ -1,7 +1,7 @@
 LoungeCompanion
 ===============
 
-Since csgolounge has shown there colors, here is the full source code for the plugin.
+Since csgolounge has shown their colors, here is the full source code for the plugin.
 Download the zip, unpack it and install via chrome as an unpacked extension.
 
 - Extract the contents somewhere
