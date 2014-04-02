@@ -19,7 +19,7 @@ select, input {
     position : absolute;
     top : -10px;
     left : -10px;
-    background-image : url(chrome-extension://__MSG_@@extension_id__/img/lc-stattrak-icon.png) !important;
+    background-image : url(chrome-extension://__MSG_@@extension_id__/img/stattrak-icon.png) !important;
 }
 .lc-souvenir {
     position : absolute;
