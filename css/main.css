@@ -19,7 +19,7 @@ select, input {
     position : absolute;
     top : -10px;
     left : -10px;
-    background-image : url(chrome-extension://__MSG_@@extension_id__/img/stattrak-icon.png) !important;
+    background-image : url(chrome-extension://__MSG_@@extension_id__/img/astattrak-icon.png) !important;
 }
 .lc-souvenir {
     position : absolute;
@@ -31,7 +31,7 @@ select, input {
 .lc-souvenir img {
     width : 100%;
     height : 100%;
-    content : url(chrome-extension://__MSG_@@extension_id__/img/souvenir-icon.png) !important;
+    content : url(chrome-extension://__MSG_@@extension_id__/img/asouvenir-icon.png) !important;
 }
 img.lc-preview-souvenir {
     display : none;
@@ -39,7 +39,7 @@ img.lc-preview-souvenir {
     bottom : 40px;
     left : 10px;
     width : 100px;
-    content : url(chrome-extension://__MSG_@@extension_id__/img/souvenir-icon-big.png) !important;
+    content : url(chrome-extension://__MSG_@@extension_id__/img/asouvenir-icon-big.png) !important;
 }
 img.lc-preview-stattrak {
     display : none;
@@ -48,11 +48,11 @@ img.lc-preview-stattrak {
     left : -50px;
     width : 150px;
     z-index : 999;
-    content : url(chrome-extension://__MSG_@@extension_id__/img/stattrak-icon-big.png) !important;
+    content : url(chrome-extension://__MSG_@@extension_id__/img/astattrak-icon-big.png) !important;
 }
 img.lc-preview-spinner {
     position : absolute;
-    content : url(chrome-extension://__MSG_@@extension_id__/img/spin.gif) !important;
+    content : url(chrome-extension://__MSG_@@extension_id__/img/aspin.gif) !important;
 }
 div#countdown {
     display : none;

@@ -3,7 +3,7 @@
     "name": "Lounge Companion (Dota 2 & CS:GO)",
     "short_name": "Lounge Companion",
     "description": "The best community addon for csgolounge and dota2lounge",
-    "version": "3.5.1",
+    "version": "3.5.3",
     "icons": {
         "128": "img/128x128.png"
     },
@@ -25,11 +25,11 @@
         ]
     },
     "web_accessible_resources": [
-        "img/spin.gif",
-        "img/lc-stattrak-icon.png",
-        "img/stattrak-icon-big.png",
-        "img/souvenir-icon.png",
-        "img/souvenir-icon-big.png",
+        "img/aspin.gif",
+        "img/astattrak-icon.png",
+        "img/astattrak-icon-big.png",
+        "img/asouvenir-icon.png",
+        "img/asouvenir-icon-big.png",
         "js/lib/jquery-2.1.0.min.js",
         "js/lib/jquery.tinysort.min.js",
         "js/lib/jquery.tablesorter.min.js",
