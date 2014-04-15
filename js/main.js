@@ -292,6 +292,47 @@ if ($(location).attr('href').endsWith('myprofile')) {
         setItemWidth();
     });
 }
+
+//If page is main page
+if ($(location).attr('href').endsWith('.com/')) {
+	//Color the team name and odds on main page
+	$("div.teamtext").each(function(index) {
+		var odds = $(this).children().last().text().slice(0,-1);
+		$(this).css("color", "rgb(" + Math.round((100 - odds)*1.8) + ", " + Math.round(odds*1.8) + ", 0)");
+	});
+	
+	//Show matches already bet on
+	//Get bets from mybet page
+	$.get("mybets", function(data) {
+		var mybets = new Object();
+		jQuery("<html>").html(data).find("div.match").each( function(index){
+			var matchNode = $(this).find("div.half:first a").first();
+			var matchId = matchNode.attr('href').split('=')[1];
+			if (matchNode.children().first().html().indexOf("(your type)") != -1 ) {
+				//Selected first team
+				mybets[matchId] = 1;
+			} else {
+				//Selected second team
+				mybets[matchId] = 2;
+			}
+		});
+		
+		//mybets now contains {matchid:1, matchid:2...}
+
+		//Apply style on main page matches
+		$("div.matchleft a").each(function(index) {
+			var matchId = $(this).attr('href').split('=')[1];
+			if(mybets[matchId] != null) {
+				if(mybets[matchId] == 1) {
+					$(this).find("div.team").first().addClass("selectedTeam");
+				} else {
+					$(this).find("div.team").last().addClass("selectedTeam");
+				}
+			}
+		});
+	});
+}
+
 // Swap wear for preview text
 $('.rarity').hover(
     function () {
@@ -389,14 +430,6 @@ $(document).ready(function () {
     $('.lc-sidebar_menu').click(function () {
         $('#submenu').toggleClass('open');
     });
-	
-	//Color the team name and odds on main page
-	if ($(location).attr('href').endsWith('.com/')) {
-		$("div.teamtext").each(function(index) {
-			var odds = $(this).children().last().text().slice(0,-1);
-			$(this).css("color", "rgb(" + Math.round((100 - odds)*1.8) + ", " + Math.round(odds*1.8) + ", 0)");
-		});
-	}
 });
 $(window).resize(function () {
     setItemWidth();
