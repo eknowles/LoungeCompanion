@@ -389,6 +389,14 @@ $(document).ready(function () {
     $('.lc-sidebar_menu').click(function () {
         $('#submenu').toggleClass('open');
     });
+	
+	//Color the team name and odds on main page
+	if ($(location).attr('href').endsWith('.com/')) {
+		$("div.teamtext").each(function(index) {
+			var odds = $(this).children().last().text().slice(0,-1);
+			$(this).css("color", "rgb(" + Math.round((100 - odds)*1.8) + ", " + Math.round(odds*1.8) + ", 0)");
+		});
+	}
 });
 $(window).resize(function () {
     setItemWidth();
