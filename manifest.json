@@ -45,7 +45,7 @@
             "19": "img/icons/19.png",
             "38": "img/icons/38.png"
         },
-        "default_title": "CSGO Lounge Settings",
+        "default_title": "Lounge Enhancer Settings",
         "default_popup": "settings.html"
     },
     "content_scripts": [{
