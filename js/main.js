@@ -126,6 +126,7 @@ function tidyItems() {
                 $(this).append('<div class="itemval"></div>');
                 $(this).find('div.itemval').text(itemvalue);
             }
+            $(this).find('div.value').hide();
         }
         if ($(this).find('.steam-link').length == 0) {
             $(this).find('.name').append('<p><a href="http://steamcommunity.com/market/listings/' + gameid + '/' + title + '" target="_blank" class="steam-link">Community Market Page</a></p>');
