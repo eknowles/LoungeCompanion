@@ -110,6 +110,17 @@ $("#backpack").bind("DOMSubtreeModified", function() {
         $(this).find(".item").hover( function() { priceItem($(this)); }, null);
     }
 });
+// Also hook on item location tab (armory/returns)
+$('#main a.tab').on("click", function() {
+    $("#backpack").html('<img src="http://cdn.dota2lounge.com/img/load.gif" id="loading" style="margin: 0.75em 2%">');
+    $("#backpack").bind("DOMSubtreeModified", function() {
+        if($(this).find(".item").length != 0) {
+            $(this).unbind("DOMSubtreeModified");
+            $(this).find(".item").hover( function() { priceItem($(this)); }, null);
+            tidyItems();
+        }
+    });
+});
 
 function tidyItems() {
     $(".item").each(function (index) {
