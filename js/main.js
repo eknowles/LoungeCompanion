@@ -59,6 +59,17 @@ function updateBetPoolWidth() {
     console.log(width);
     $holding.css('width', width);
 }
+function priceSimilarItems(item) {
+    var itemId = item.find('img.smallimg').attr("alt");
+    var itemPrice = item.find('.rarity').html();
+    $(".item").each( function () {
+        if ($(this).find('img.smallimg').attr("alt") == itemId && !$(this).hasClass('priced')) {
+            $(this).find('.rarity').html(itemPrice);
+            $(this).addClass('priced');
+        }
+    });
+}
+
 function priceItem(SearchItem) {
     if (SearchItem.hasClass('priced')) {
         // has already set a price so dont do anything
@@ -81,6 +92,7 @@ function priceItem(SearchItem) {
                     lowest_price = item_to_get[1].trim();
                     SearchItem.find('.rarity').html(lowest_price);
                     SearchItem.addClass('priced');
+                    priceSimilarItems(SearchItem);
                 } else {
                     SearchItem.find('.rarity').html('Not Found');
                 }
