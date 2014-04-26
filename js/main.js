@@ -59,42 +59,69 @@ function updateBetPoolWidth() {
     console.log(width);
     $holding.css('width', width);
 }
-$(".item").hover(
-    function () {
-        var SearchItem = $(this);
-        // on mouse in
-        if (SearchItem.hasClass('priced')) {
-            // has already set a price so dont do anything
-        } else {
-            SearchItem.find('.rarity').html('Loading...');
-            var itemurl = "http://steamcommunity.com/market/listings/" + gameid + "/" + SearchItem.find('img.smallimg').attr("alt") + "/";
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", itemurl, true);
-            xhr.withCredentials = true;
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4) {
-                    var item_price = xhr.responseText.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/g);
-                    if (item_price) {
-                        $(item_price).each(function (index, value) {
-                            if (!(value.match(/\!/))) {
-                                item_to_get = value.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
-                                return false;
-                            }
-                        });
-                        lowest_price = item_to_get[1].trim();
-                        SearchItem.find('.rarity').html(lowest_price);
-                        SearchItem.addClass('priced');
-                    } else {
-                        SearchItem.find('.rarity').html('Not Found');
-                    }
-                }
-            };
-            xhr.send();
+function priceSimilarItems(item) {
+    var itemId = item.find('img.smallimg').attr("alt");
+    var itemPrice = item.find('.rarity').html();
+    $(".item").each( function () {
+        if ($(this).find('img.smallimg').attr("alt") == itemId && !$(this).hasClass('priced')) {
+            $(this).find('.rarity').html(itemPrice);
+            $(this).addClass('priced');
         }
-    }, function () {
-        // on mouse out
+    });
+}
+
+function priceItem(SearchItem) {
+    if (SearchItem.hasClass('priced')) {
+        // has already set a price so dont do anything
+    } else {
+        SearchItem.find('.rarity').html('Loading...');
+        var itemurl = "http://steamcommunity.com/market/listings/" + gameid + "/" + SearchItem.find('img.smallimg').attr("alt") + "/";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", itemurl, true);
+        xhr.withCredentials = true;
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                var item_price = xhr.responseText.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/g);
+                if (item_price) {
+                    $(item_price).each(function (index, value) {
+                        if (!(value.match(/\!/))) {
+                            item_to_get = value.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
+                            return false;
+                        }
+                    });
+                    lowest_price = item_to_get[1].trim();
+                    SearchItem.find('.rarity').html(lowest_price);
+                    SearchItem.addClass('priced');
+                    priceSimilarItems(SearchItem);
+                } else {
+                    SearchItem.find('.rarity').html('Not Found');
+                }
+            }
+        };
+        xhr.send();
     }
-);
+}
+
+$(".item").hover( function() { priceItem($(this)); }, null);
+// When backpack is loaded add the mouse event to its item too
+$("#backpack").bind("DOMSubtreeModified", function() {
+    if($(this).find(".item").length != 0) {
+        $(this).unbind("DOMSubtreeModified");
+        $(this).find(".item").hover( function() { priceItem($(this)); }, null);
+    }
+});
+// Also hook on item location tab (armory/returns)
+$('#main a.tab').on("click", function() {
+    $("#backpack").html('<img src="http://cdn.dota2lounge.com/img/load.gif" id="loading" style="margin: 0.75em 2%">');
+    $("#backpack").bind("DOMSubtreeModified", function() {
+        if($(this).find(".item").length != 0) {
+            $(this).unbind("DOMSubtreeModified");
+            $(this).find(".item").hover( function() { priceItem($(this)); }, null);
+            tidyItems();
+        }
+    });
+});
+
 function tidyItems() {
     $(".item").each(function (index) {
         lowest_price = '';
@@ -110,6 +137,7 @@ function tidyItems() {
                 $(this).append('<div class="itemval"></div>');
                 $(this).find('div.itemval').text(itemvalue);
             }
+            $(this).find('div.value').hide();
         }
         if ($(this).find('.steam-link').length == 0) {
             $(this).find('.name').append('<p><a href="http://steamcommunity.com/market/listings/' + gameid + '/' + title + '" target="_blank" class="steam-link">Community Market Page</a></p>');
@@ -274,13 +302,6 @@ if ($(location).attr('href').endsWith('mybets')) {
 }
 // If page is myprofile
 if ($(location).attr('href').endsWith('myprofile')) {
-    var ajaxtimeout = 2;
-    // Wait 2 seconds for backpack to load from ajax
-    $('item').prop("onclick", null);
-    setTimeout(function () {
-        tidyItems();
-        setItemWidth();
-    }, ajaxtimeout * 1000);
     $("a.lc-button:contains('Bet History')").click(function () {
         console.log('Clicked Bet History');
         tidyItems();
@@ -292,6 +313,47 @@ if ($(location).attr('href').endsWith('myprofile')) {
         setItemWidth();
     });
 }
+
+//If page is main page
+if ($(location).attr('href').endsWith('.com/')) {
+    //Color the team name and odds on main page
+    $("div.teamtext").each(function(index) {
+        var odds = $(this).children().last().text().slice(0,-1);
+        $(this).css("color", "rgb(" + Math.round((100 - odds)*1.8) + ", " + Math.round(odds*1.8) + ", 0)");
+    });
+    
+    //Show matches already bet on
+    //Get bets from mybet page
+    $.get("mybets", function(data) {
+        var mybets = new Object();
+        jQuery("<html>").html(data).find("div.match").each( function(index){
+            var matchNode = $(this).find("div.half:first a").first();
+            var matchId = matchNode.attr('href').split('=')[1];
+            if (matchNode.children().first().html().indexOf("(your type)") != -1 ) {
+                //Selected first team
+                mybets[matchId] = 1;
+            } else {
+                //Selected second team
+                mybets[matchId] = 2;
+            }
+        });
+        
+        //mybets now contains {matchid:1, matchid:2...}
+
+        //Apply style on main page matches
+        $("div.matchleft a").each(function(index) {
+            var matchId = $(this).attr('href').split('=')[1];
+            if(mybets[matchId] != null) {
+                if(mybets[matchId] == 1) {
+                    $(this).find("div.team").first().addClass("selectedTeam");
+                } else {
+                    $(this).find("div.team").last().addClass("selectedTeam");
+                }
+            }
+        });
+    });
+}
+
 // Swap wear for preview text
 $('.rarity').hover(
     function () {
