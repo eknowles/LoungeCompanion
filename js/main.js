@@ -70,8 +70,33 @@ function priceSimilarItems(item) {
     });
 }
 
+var currSigns = ["€", "£", "pуб", "R$", "$"];
+function updateCurrencies() {
+    var conversionRates = {};
+    $.get('http://query.yahooapis.com/v1/public/yql?q=select * from yahoo.finance.xchange where pair in ("EURUSD", "GBPUSD", "RUBUSD", "BRLUSD", "USDUSD")&env=store://datatables.org/alltableswithkeys&format=json',
+        function(data) {
+            $(data.query.results.rate).each(function(index, value) {
+                conversionRates[currSigns[index]] = value.Rate;
+            })
+            localStorage.setItem("companionCurrencies", JSON.stringify(conversionRates));
+            localStorage.setItem("companionCurrenciesLastUpdated", Date.now());
+        }
+    );
+}
+function getCurrencies() {
+    if(!localStorage.getItem("companionCurrencies")) {
+        updateCurrencies();
+    }
+    if(Math.abs(Date.now() - localStorage.getItem("companionCurrenciesLastUpdated")) > 604800000) {
+        updateCurrencies();
+    }
+    return JSON.parse(localStorage.getItem("companionCurrencies"));
+}
+
+var currencyConvert = getCurrencies();
+
 function priceItem(SearchItem) {
-    if (SearchItem.hasClass('priced')) {
+    if (SearchItem.hasClass('marketPriced')) {
         // has already set a price so dont do anything
     } else {
         SearchItem.find('.rarity').html('Loading...');
@@ -81,17 +106,27 @@ function priceItem(SearchItem) {
         xhr.withCredentials = true;
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
-                var item_price = xhr.responseText.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/g);
-                if (item_price) {
-                    $(item_price).each(function (index, value) {
-                        if (!(value.match(/\!/))) {
-                            item_to_get = value.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
+                var listings = $(xhr.responseText).find(".market_listing_row.market_recent_listing_row");
+                if ($(listings).length) {
+                    var lowestPrice;
+                    $(listings).each(function (index, value) {
+                        if($(value).find(".item_market_action_button_green")) {
+                            lowestPrice = $(value).find(".market_listing_price.market_listing_price_with_fee").text().trim();
                             return false;
                         }
                     });
-                    lowest_price = item_to_get[1].trim();
-                    SearchItem.find('.rarity').html(lowest_price);
-                    SearchItem.addClass('priced');
+
+                    // check if the price has dashes
+                    if(lowestPrice.indexOf("--") != -1) {
+                        lowestPrice = lowestPrice.replace("--", "00");
+                    }
+                    for(x in currencyConvert) {
+                        if(lowestPrice.indexOf(x) != -1) {
+                            lowestPrice = "$ " + (lowestPrice.replace(x, "").replace(",", ".") * currencyConvert[x]).toFixed(2).replace(".", ",");
+                        }
+                    }
+                    SearchItem.find('.rarity').html(lowestPrice);
+                    SearchItem.addClass('marketPriced');
                     priceSimilarItems(SearchItem);
                 } else {
                     SearchItem.find('.rarity').html('Not Found');
