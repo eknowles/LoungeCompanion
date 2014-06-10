@@ -87,7 +87,7 @@ function getCurrencies() {
     if(!localStorage.getItem("companionCurrencies")) {
         updateCurrencies();
     }
-    if(Math.abs(Date.now() - localStorage.getItem("companionCurrenciesLastUpdated")) > (1000 * 60 * 60 * 24 * 7)) {
+    if(Math.abs(Date.now() - localStorage.getItem("companionCurrenciesLastUpdated")) > 604800000) {
         updateCurrencies();
     }
     return JSON.parse(localStorage.getItem("companionCurrencies"));
