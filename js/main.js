@@ -16,6 +16,13 @@ chrome.storage.local.get("backgroundImage", function (fetchedData) {
     bg = fetchedData.backgroundImage
     document.body.style.backgroundImage = "url(http://cdn.steamcommunity.com/economy/image/" + bg + ")";
 });
+//Global variable for fixed item size
+var itemSize = 0;
+chrome.storage.local.get("itemSize", function (fetchedData) {
+    itemSize = fetchedData.itemSize;
+    console.log(itemSize);
+});
+
 var gameid = ''; // csgo 730, dota2 570
 if ($(location).attr('href').startsWith('http://csgolounge.com/')) {
     gameid = '730';
@@ -253,9 +260,12 @@ function setItemWidth() {
         //     itemRowCount = itemRowCount - 1;
         // }
         newItemWidth = (parentWidth / itemRowCount) - 9;
-        item.css({
-            'width': newItemWidth + 'px'
-        });
+        if (itemSize != 0) {
+            item.css({ 'width': itemSize + 'px'});
+        } else {
+            item.css({ 'width': newItemWidth + 'px' });
+        }
+        
         if ($(this).hasClass('Souvenir').toString() == 'true') {
             if ($(this).children('div.lc-souvenir').length == 0) {
                 $(this).append('<div class="lc-souvenir"><img src="" alt="Souvenir"/></div>');
@@ -269,6 +279,19 @@ function setItemWidth() {
         item.show();
         // $delayFadeIn += 10;
     });
+}
+//Sort the returned items by their value
+function sortReturns() {
+    var items = $($('.standard')[1]).find('.item');
+    items.tsort('div.value', { order: 'desc' });
+}
+function calculateReturnsValue() {
+    var items = $($('.standard')[1]).find('.item');
+    var value = 0;
+    items.each(function (index) {
+        value += parseFloat($(this).find('.value').html().replace('$ ', ''));
+    });
+    return value;
 }
 // If page is match page
 if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
@@ -437,7 +460,7 @@ $(document).ready(function () {
         tidyItems();
     });
     setInterval(function () {
-        setItemWidth();
+       setItemWidth();
     }, 3000);
     var $loadDelay = 0;
     $(".lc-big-preview-bg, .lc-big-preview, .lc-preview-img").click(function () {
@@ -451,6 +474,10 @@ $(document).ready(function () {
     $('.lc-sidebar_menu').click(function () {
         $('#submenu').toggleClass('open');
     });
+    sortReturns();
+    //Add value of returned items to the title
+    var title = $($('div .title')[1]);
+    title.text( title.text() + ' (' + '$' + calculateReturnsValue().toFixed(2) + ')');
 });
 $(window).resize(function () {
     setItemWidth();

@@ -3,6 +3,33 @@ function save_options() {
     var background = $('#backgrounds').val();
     chrome.storage.local.set({'backgroundImage': background}, function () {
     });
+    if ($("#fixedSize").is(':checked')) {
+        $('input.sizeRadio').each(function () {
+            if ($(this).is(':checked')) {
+                //Default value that I got on 1080p
+                var size = 185;
+                //Handle custom user input
+                if ($(this).val() == 'custom') {
+                    //Replace px in case user added it
+                    var input = $('input.sizeInput').val().replace('px', '').replace(' ', '');
+                    var value = parseFloat(input);
+                    if (!isNaN(value)) {
+                        //70 seems to be minimum size for some reason
+                        if (value >= 70) {
+                            size = value;
+                        } else {
+                            size = 70;
+                        }
+                    }
+                } else {
+                    size = $(this).val();
+                }
+                chrome.storage.local.set({'itemSize': size});
+                return false;
+            }
+        });
+    } 
+    window.close();  
 }
 // Resets bg options to localStorage.
 function reset_options() {
@@ -10,6 +37,7 @@ function reset_options() {
     chrome.storage.local.set({'backgroundImage': background}, function () {
         $("#backgrounds").val(background);
     });
+    chrome.storage.local.set({ 'itemSize': 185 });
 }
 // Restores select box state to saved value from localStorage.
 function restore_options() {
@@ -17,7 +45,49 @@ function restore_options() {
         bg = fetchedData.backgroundImage;
         $("#backgrounds").val(bg);
     });
+    chrome.storage.local.get('itemSize', function (fetchedData) {
+        if (fetchedData.itemSize != null) {
+            $('#fixedSize').prop('checked', true);
+            $('#fixedSize').trigger('change');
+            switch (fetchedData.itemSize) {
+                case 185:
+                    $('#largeRadio').prop('checked', true);
+                    break;
+                case 125:
+                    $('#mediumRadio').prop('checked', true);
+                    break;
+                case 70:
+                    $('#smallRadio').prop('checked', true);
+                    break;
+                default:
+                    $('#customRadio').prop('checked', true);
+                    $('#customRadio').trigger('change');
+                    $('input.sizeInput').val(fetchedData.itemSize);
+            }
+        }
+    });
 }
+//Show item size controls if checkbox checked
+$('#fixedSize').change(function () {
+    if (this.checked) {
+        $('#itemsize-group').fadeIn();
+    } else {
+        $('#itemsize-group').fadeOut();
+    }
+});
+//Register handles for all radio inputs so that we can hide sizeInput when selection changes
+$('input.sizeRadio').each(function (index) {
+    $(this).change(function () {
+        var sizeInput = $('input.sizeInput');
+        if (!sizeInput.is(':hidden')) {
+            sizeInput.fadeOut();
+        }
+    });
+});
+//Show sizeInput when 'custom' radio selected
+$('#customRadio').change(function () {
+    $('input.sizeInput').fadeIn();
+});
 $(document).ready(function () {
     restore_options();
     $("#dTable").tablesorter({ sortList: [
