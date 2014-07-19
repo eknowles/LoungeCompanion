@@ -475,9 +475,12 @@ $(document).ready(function () {
         $('#submenu').toggleClass('open');
     });
     sortReturns();
-    //Add value of returned items to the title
+    //Add value of returned items to the title if we have the right title
     var title = $($('div .title')[1]);
-    title.text( title.text() + ' (' + '$' + calculateReturnsValue().toFixed(2) + ')');
+    if (title.text() == 'returns') {
+        title.text( title.text() + ' (' + '$' + calculateReturnsValue().toFixed(2) + ')');
+    } 
+
 });
 $(window).resize(function () {
     setItemWidth();
