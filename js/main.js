@@ -78,33 +78,29 @@ function priceSimilarItems(item) {
 }
 
 function priceItem(SearchItem) {
-    if (SearchItem.hasClass('priced')) {
-        // has already set a price so dont do anything
-    } else {
+    // has already set a price so dont do anything
+    if (!SearchItem.hasClass('priced')) {
         SearchItem.find('.rarity').html('Loading...');
-        var itemurl = "http://steamcommunity.com/market/listings/" + gameid + "/" + SearchItem.find('img.smallimg').attr("alt") + "/";
+        //Temporary until settings
+        var currency = 3;
+        var itemName = SearchItem.find('img.smallimg').attr("alt");
+        var itemUrl = "http://steamcommunity.com/market/priceoverview/?country=US&currency=" + currency + "&appid=" + gameid + "&market_hash_name=" + itemName;
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", itemurl, true);
+        xhr.open("GET", itemUrl, true);
         xhr.withCredentials = true;
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
-                var item_price = xhr.responseText.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/g);
-                if (item_price) {
-                    $(item_price).each(function (index, value) {
-                        if (!(value.match(/\!/))) {
-                            item_to_get = value.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
-                            return false;
-                        }
-                    });
-                    lowest_price = item_to_get[1].trim();
-                    SearchItem.find('.rarity').html(lowest_price);
-                    SearchItem.addClass('priced');
-                    priceSimilarItems(SearchItem);
-                } else {
-                    SearchItem.find('.rarity').html('Not Found');
-                }
+                var response = jQuery.parseJSON(xhr.responseText);
+                console.log(response.lowest_price.substring(0, 4));
+                lowest_price = parseFloat(response.lowest_price.substring(0, 4).replace(',','.'));
+                //Temporary currency symbol
+                SearchItem.find('.rarity').html(lowest_price + '€');
+                SearchItem.addClass('priced');
+                priceSimilarItems(SearchItem);
+            } else {
+                SearchItem.find('.rarity').html('Not Found');
             }
-        };
+        }
         xhr.send();
     }
 }
@@ -294,9 +290,16 @@ function calculateReturnsValue() {
     return value;
 }
 function calculateBetValue(bet) {
+    //Get prices for all items
     bet.find(".item[class!='priced']").each(function () {
         priceItem($(this));
     });
+    //Wait until all items have been priced
+    var loop = setInterval(function () {
+        if (bet.find('.item:not(.priced)').length == 0) {
+            clearInterval(loop);
+        }
+    }, 1000);
 }
 // If page is match page
 if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
@@ -502,8 +505,9 @@ $(document).ready(function () {
         tidyItems();
     });
     setInterval(function () {
-       setItemWidth();
+        setItemWidth();
     }, 3000);
+
     var $loadDelay = 0;
     $(".lc-big-preview-bg, .lc-big-preview, .lc-preview-img").click(function () {
         closePreview();
