@@ -16,6 +16,13 @@ chrome.storage.local.get("backgroundImage", function (fetchedData) {
     bg = fetchedData.backgroundImage
     document.body.style.backgroundImage = "url(http://cdn.steamcommunity.com/economy/image/" + bg + ")";
 });
+//Global variable for fixed item size
+var itemSize = 0;
+chrome.storage.local.get("itemSize", function (fetchedData) {
+    itemSize = fetchedData.itemSize;
+    console.log(itemSize);
+});
+
 var gameid = ''; // csgo 730, dota2 570
 if ($(location).attr('href').startsWith('http://csgolounge.com/')) {
     gameid = '730';
@@ -71,33 +78,29 @@ function priceSimilarItems(item) {
 }
 
 function priceItem(SearchItem) {
-    if (SearchItem.hasClass('priced')) {
-        // has already set a price so dont do anything
-    } else {
+    // has already set a price so dont do anything
+    if (!SearchItem.hasClass('priced')) {
         SearchItem.find('.rarity').html('Loading...');
-        var itemurl = "http://steamcommunity.com/market/listings/" + gameid + "/" + SearchItem.find('img.smallimg').attr("alt") + "/";
+        //Temporary until settings
+        var currency = 3;
+        var itemName = SearchItem.find('img.smallimg').attr("alt");
+        var itemUrl = "http://steamcommunity.com/market/priceoverview/?country=US&currency=" + currency + "&appid=" + gameid + "&market_hash_name=" + itemName;
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", itemurl, true);
+        xhr.open("GET", itemUrl, true);
         xhr.withCredentials = true;
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
-                var item_price = xhr.responseText.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/g);
-                if (item_price) {
-                    $(item_price).each(function (index, value) {
-                        if (!(value.match(/\!/))) {
-                            item_to_get = value.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
-                            return false;
-                        }
-                    });
-                    lowest_price = item_to_get[1].trim();
-                    SearchItem.find('.rarity').html(lowest_price);
-                    SearchItem.addClass('priced');
-                    priceSimilarItems(SearchItem);
-                } else {
-                    SearchItem.find('.rarity').html('Not Found');
-                }
+                var response = jQuery.parseJSON(xhr.responseText);
+                console.log(response.lowest_price.substring(0, 4));
+                lowest_price = parseFloat(response.lowest_price.substring(0, 4).replace(',','.'));
+                //Temporary currency symbol
+                SearchItem.find('.rarity').html(lowest_price + '€');
+                SearchItem.addClass('priced');
+                priceSimilarItems(SearchItem);
+            } else {
+                SearchItem.find('.rarity').html('Not Found');
             }
-        };
+        }
         xhr.send();
     }
 }
@@ -253,9 +256,12 @@ function setItemWidth() {
         //     itemRowCount = itemRowCount - 1;
         // }
         newItemWidth = (parentWidth / itemRowCount) - 9;
-        item.css({
-            'width': newItemWidth + 'px'
-        });
+        if (itemSize != 0) {
+            item.css({ 'width': itemSize + 'px'});
+        } else {
+            item.css({ 'width': newItemWidth + 'px' });
+        }
+        
         if ($(this).hasClass('Souvenir').toString() == 'true') {
             if ($(this).children('div.lc-souvenir').length == 0) {
                 $(this).append('<div class="lc-souvenir"><img src="" alt="Souvenir"/></div>');
@@ -270,6 +276,31 @@ function setItemWidth() {
         // $delayFadeIn += 10;
     });
 }
+//Sort the returned items by their value
+function sortReturns() {
+    var items = $($('.standard')[1]).find('.item');
+    items.tsort('div.value', { order: 'desc' });
+}
+function calculateReturnsValue() {
+    var items = $($('.standard')[1]).find('.item');
+    var value = 0;
+    items.each(function (index) {
+        value += parseFloat($(this).find('.value').html().replace('$ ', ''));
+    });
+    return value;
+}
+function calculateBetValue(bet) {
+    //Get prices for all items
+    bet.find(".item[class!='priced']").each(function () {
+        priceItem($(this));
+    });
+    //Wait until all items have been priced
+    var loop = setInterval(function () {
+        if (bet.find('.item:not(.priced)').length == 0) {
+            clearInterval(loop);
+        }
+    }, 1000);
+}
 // If page is match page
 if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
     $('section.box').first().next().find('.gradient').append('<div id="disqus_thread"></div>');
@@ -279,7 +310,7 @@ if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 
-    }
+}
 // If page is mybets
 if ($(location).attr('href').endsWith('mybets')) {
     $('#freezebutton').after('<a class="lc-button lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
@@ -302,10 +333,47 @@ if ($(location).attr('href').endsWith('mybets')) {
 }
 // If page is myprofile
 if ($(location).attr('href').endsWith('myprofile')) {
-    $("a.lc-button:contains('Bet History')").click(function () {
-        console.log('Clicked Bet History');
-        tidyItems();
-        setItemWidth();
+    /*
+    *   BET HISTORY ADDITIONS
+    */
+    //Delete old button and insert a new one so that we can do custom events for it
+    var oldButton = $("a.lc-button:contains('Bet History')");
+    var newButton = $('<a class="lc-button">Bet History</a>');
+    oldButton.parent().append(newButton);
+    oldButton.remove();
+    newButton.click(function () {
+        alert('Clicked');
+        var container = $('#ajaxCont');
+        container.html('<img src="../img/load.gif" id="loading" style="margin: 0.75em 2%">');
+        //Need to keep jquery in scope
+        var $$ = $;
+        //Get bet historyButton
+        $.ajax({
+            url: 'ajax/betHistory.php',
+            type: 'POST',
+            success: function(data) {
+                alert('Success');
+                container.html(data).slideDown('fast', function () {
+                    tidyItems();
+                    setItemWidth();
+                    //Register hover event again when the items actually are here
+                    $$(".item").hover( function() { priceItem($$(this)); }, null);
+                    //Every bet has a +
+                    var bets = $("a:contains('+')[class!='info']");
+                    bets.each(function (index) {
+                        $(this).parent().css('white-space', 'nowrap');
+                        var betIdString = $(this).attr('onclick');
+                        var betId = betIdString.substring(3, betIdString.indexOf("'", 4));
+                        //Link for calculating bet values
+                        var link = $('<a style="margin-left:5px">$</a>');
+                        link.click(function () {
+                            calculateBetValue($(betId));
+                        });
+                        $(this).parent().append(link);
+                    });
+                });
+            }
+        });
     });
     $("a.lc-button:contains('Trade History')").click(function () {
         console.log('Clicked Trade History');
@@ -439,6 +507,7 @@ $(document).ready(function () {
     setInterval(function () {
         setItemWidth();
     }, 3000);
+
     var $loadDelay = 0;
     $(".lc-big-preview-bg, .lc-big-preview, .lc-preview-img").click(function () {
         closePreview();
@@ -451,6 +520,13 @@ $(document).ready(function () {
     $('.lc-sidebar_menu').click(function () {
         $('#submenu').toggleClass('open');
     });
+    sortReturns();
+    //Add value of returned items to the title if we have the right title
+    var title = $($('div .title')[1]);
+    if (title.text() == 'returns') {
+        title.text( title.text() + ' (' + '$' + calculateReturnsValue().toFixed(2) + ')');
+    } 
+
 });
 $(window).resize(function () {
     setItemWidth();

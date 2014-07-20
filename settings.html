@@ -51,7 +51,6 @@
 
             <form class="form-horizontal">
                 <fieldset>
-
                     <div class="form-group">
                         <div class="col-md-12">
                             <p><a href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank" class="btn btn-primary btn-block"><i class="fa fa-heart"></i> Donate via Trade Offer!</a>
@@ -70,6 +69,38 @@
                         </div>
                     </div>
 
+                     <div class="checkbox">
+                      <label>
+                        <input type="checkbox" id="fixedSize" value=""> Use a fixed size for items
+                      </label>
+                    </div>
+                    <div id="itemsize-group" style="display: none">
+                        <div class="radio">
+                          <label>
+                            <input type="radio" class="sizeRadio" name="size" value="185" id="largeRadio" checked>
+                                Large (<b>185px</b>)
+                          </label>
+                        </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" class="sizeRadio" name="size" value="125" id="mediumRadio">
+                                Medium (<b>125px</b>)
+                          </label>
+                        </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" class="sizeRadio" name="size" value="70" id="smallRadio">
+                                Small (<b>70px</b>)
+                          </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" class="sizeRadio" name="size" id="customRadio" value="custom">
+                                Custom
+                            </label>
+                        </div>
+                        <input type="text" name="sizeInput" class="form-control sizeInput" style="width: 70px; display: none; margin-top: 5px;" placeholder="Size">
+                    </div>
                     <!-- Button (Double) -->
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="saving"></label>
@@ -78,7 +109,6 @@
                             <a id="reset" name="reset" class="btn btn-default">Default</a>
                         </div>
                     </div>
-
                 </fieldset>
             </form>
             </div>

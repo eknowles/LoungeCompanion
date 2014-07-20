@@ -25,11 +25,11 @@
         ]
     },
     "web_accessible_resources": [
-        "img/aspin.gif",
-        "img/astattrak-icon.png",
-        "img/astattrak-icon-big.png",
-        "img/asouvenir-icon.png",
-        "img/asouvenir-icon-big.png",
+        "img/spin.gif",
+        "img/stattrak-icon.png",
+        "img/stattrak-icon-big.png",
+        "img/souvenir-icon.png",
+        "img/souvenir-icon-big.png",
         "js/lib/jquery-2.1.0.min.js",
         "js/lib/jquery.tinysort.min.js",
         "js/lib/jquery.tablesorter.min.js",
