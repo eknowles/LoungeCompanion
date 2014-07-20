@@ -325,10 +325,25 @@ if ($(location).attr('href').endsWith('mybets')) {
 }
 // If page is myprofile
 if ($(location).attr('href').endsWith('myprofile')) {
-    $("a.lc-button:contains('Bet History')").click(function () {
-        console.log('Clicked Bet History');
-        tidyItems();
-        setItemWidth();
+    var historyButton = $("a.lc-button:contains('Bet History')");
+    //Delete existing onclick and create new identical one here so that we know when the database query finishes
+    historyButton.removeAttr('onclick');
+    historyButton.click(function () {
+        var container = $('#ajaxCont');
+        container.html('<img src="../img/load.gif" id="loading" style="margin: 0.75em 2%">');
+        //Need to keep jquery in scope
+        var $$ = $;
+        $.ajax({
+            url: 'ajax/betHistory.php',
+            type: 'POST',
+            success: function(data) {
+                container.html(data).slideDown('fast');
+                tidyItems();
+                setItemWidth();
+                //Register hover event again when the items actually are here
+                $$(".item").hover( function() { priceItem($$(this)); }, null);
+            }
+        });
     });
     $("a.lc-button:contains('Trade History')").click(function () {
         console.log('Clicked Trade History');
