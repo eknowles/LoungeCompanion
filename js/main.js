@@ -293,6 +293,11 @@ function calculateReturnsValue() {
     });
     return value;
 }
+function calculateBetValue(bet) {
+    bet.find(".item[class!='priced']").each(function () {
+        priceItem($(this));
+    });
+}
 // If page is match page
 if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
     $('section.box').first().next().find('.gradient').append('<div id="disqus_thread"></div>');
@@ -302,7 +307,7 @@ if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 
-    }
+}
 // If page is mybets
 if ($(location).attr('href').endsWith('mybets')) {
     $('#freezebutton').after('<a class="lc-button lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
@@ -325,23 +330,45 @@ if ($(location).attr('href').endsWith('mybets')) {
 }
 // If page is myprofile
 if ($(location).attr('href').endsWith('myprofile')) {
-    var historyButton = $("a.lc-button:contains('Bet History')");
-    //Delete existing onclick and create new identical one here so that we know when the database query finishes
-    historyButton.removeAttr('onclick');
-    historyButton.click(function () {
+    /*
+    *   BET HISTORY ADDITIONS
+    */
+    //Delete old button and insert a new one so that we can do custom events for it
+    var oldButton = $("a.lc-button:contains('Bet History')");
+    var newButton = $('<a class="lc-button">Bet History</a>');
+    oldButton.parent().append(newButton);
+    oldButton.remove();
+    newButton.click(function () {
+        alert('Clicked');
         var container = $('#ajaxCont');
         container.html('<img src="../img/load.gif" id="loading" style="margin: 0.75em 2%">');
         //Need to keep jquery in scope
         var $$ = $;
+        //Get bet historyButton
         $.ajax({
             url: 'ajax/betHistory.php',
             type: 'POST',
             success: function(data) {
-                container.html(data).slideDown('fast');
-                tidyItems();
-                setItemWidth();
-                //Register hover event again when the items actually are here
-                $$(".item").hover( function() { priceItem($$(this)); }, null);
+                alert('Success');
+                container.html(data).slideDown('fast', function () {
+                    tidyItems();
+                    setItemWidth();
+                    //Register hover event again when the items actually are here
+                    $$(".item").hover( function() { priceItem($$(this)); }, null);
+                    //Every bet has a +
+                    var bets = $("a:contains('+')[class!='info']");
+                    bets.each(function (index) {
+                        $(this).parent().css('white-space', 'nowrap');
+                        var betIdString = $(this).attr('onclick');
+                        var betId = betIdString.substring(3, betIdString.indexOf("'", 4));
+                        //Link for calculating bet values
+                        var link = $('<a style="margin-left:5px">$</a>');
+                        link.click(function () {
+                            calculateBetValue($(betId));
+                        });
+                        $(this).parent().append(link);
+                    });
+                });
             }
         });
     });
