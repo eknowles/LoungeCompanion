@@ -460,18 +460,22 @@ $('.rarity').hover(
         $this.removeClass('lc-hover-preview-active');
     }
 );
-// Open up the preview modal
-$("a:contains('Preview')").attr("onclick", null);
-$("a:contains('Preview')").click(function () {
-    var poop = $(this).parent().parent().find('.rarity');
-    var newSrc = poop.prev().prev().attr("src").replace("99fx66f", ""); //360fx360f
-    var newName = poop.prev().prev().attr('alt');
-    var steamLink = 'http://steamcommunity.com/market/listings/' + gameid + '/' + newName;
-    $(".lc-preview-img").attr("src", newSrc);
-    $(".lc-preview-title").text(newName);
-    $(".lc-preview-steamlink").attr('href', steamLink);
-    openPreview(poop);
+// Replace regular previews with loungecompanion previews
+$("a:contains('Preview')").each(function (elem) {
+    var newLink = $('<a>Preview</a>');
+    newLink.click(function () {
+        var root = $(this).parent().parent().find('.rarity');
+        var newSrc = root.prev().prev().attr("src").replace("99fx66f", ""); //360fx360f
+        var newName = root.prev().prev().attr('alt');
+        var steamLink = 'http://steamcommunity.com/market/listings/' + gameid + '/' + newName;
+        $(".lc-preview-img").attr("src", newSrc);
+        $(".lc-preview-title").text(newName);
+        $(".lc-preview-steamlink").attr('href', steamLink);
+        openPreview(root);
+    });
+    $(this).replaceWith(newLink);
 });
+
 $(".rarity").click(function () {
     var newSrc = $(this).prev().prev().attr("src").replace("99fx66f", ""); //360fx360f
     var newName = $(this).prev().prev().attr('alt');
