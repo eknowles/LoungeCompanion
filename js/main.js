@@ -297,32 +297,33 @@ function calculateBetValue(bet) {
     //Wait until all items have been priced
     var loop = setInterval(function () {
         if (bet.find('.item:not(.priced)').length == 0) {
-
             function sumItems(items) {
                 var totalValue = 0;
-                //.each didnt work for some reason so had to use a for loop
-                for (var i = 0; i < items.length; i++) {
+                items.each(function (index) {
                     //Temporary currency
-                    var value = parseFloat($(items[i]).find('.rarity').text().replace('€', ''));
+                    var value = parseFloat($(this).find('.rarity').text().replace('€', ''));
                     if (!isNaN(value)) {
                         totalValue += value;
                     }
-                }
+                });
                 return totalValue;
             }
-            console.log("bet length" + bet.length);
             var placedValue = sumItems(bet.first().find('.item'));
             var headerText = '';
             //Bet was won
             if (bet.last().children().length > 1) {
                 var wonValue = sumItems(bet.last().find('.item'));
                 //Temporary currency
-                headerText = '<span style="color:green">' + wonValue.toFixed(2) + '€' + '</span>';
+                headerText = wonValue.toFixed(2) + '€';
+                bet.last().children().first().append('<br>(' + wonValue.toFixed(2) + '€)');
             } else { //Bet was lost
-                headerText = '-' + placedValue.toFixed(2) + '€';
+                headerText = placedValue.toFixed(2) + '€';
             }
-            //sbet.prev().children(':eq(0)').find('a:eq(1)').text(headerText).css('color', 'blue !important;');
-            console.log(placedValue);
+            //Set header text
+            bet.prev().find('span').text(headerText)
+            //Add placed items value
+            //Temporary currency
+            bet.first().children().first().append('<br>(' + placedValue.toFixed(2) + '€)');
             clearInterval(loop);
         }
     }, 1000);
@@ -378,6 +379,8 @@ if ($(location).attr('href').endsWith('myprofile')) {
             type: 'POST',
             success: function(data) {
                 container.html(data).slideDown('fast', function () {
+                    //Add closed class to closed matches
+                    $('span:contains(closed)').attr('class', 'closed');
                     tidyItems();
                     setItemWidth();
                     //Register hover event again when the items actually are here
