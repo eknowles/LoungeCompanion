@@ -91,7 +91,6 @@ function priceItem(SearchItem) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
                 var response = jQuery.parseJSON(xhr.responseText);
-                console.log(response.lowest_price.substring(0, 4));
                 lowest_price = parseFloat(response.lowest_price.substring(0, 4).replace(',','.'));
                 //Temporary currency symbol
                 SearchItem.find('.rarity').html(lowest_price + '€');
@@ -294,9 +293,36 @@ function calculateBetValue(bet) {
     bet.find(".item[class!='priced']").each(function () {
         priceItem($(this));
     });
+
     //Wait until all items have been priced
     var loop = setInterval(function () {
         if (bet.find('.item:not(.priced)').length == 0) {
+
+            function sumItems(items) {
+                var totalValue = 0;
+                //.each didnt work for some reason so had to use a for loop
+                for (var i = 0; i < items.length; i++) {
+                    //Temporary currency
+                    var value = parseFloat($(items[i]).find('.rarity').text().replace('€', ''));
+                    if (!isNaN(value)) {
+                        totalValue += value;
+                    }
+                }
+                return totalValue;
+            }
+            console.log("bet length" + bet.length);
+            var placedValue = sumItems(bet.first().find('.item'));
+            var headerText = '';
+            //Bet was won
+            if (bet.last().children().length > 1) {
+                var wonValue = sumItems(bet.last().find('.item'));
+                //Temporary currency
+                headerText = '<span style="color:green">' + wonValue.toFixed(2) + '€' + '</span>';
+            } else { //Bet was lost
+                headerText = '-' + placedValue.toFixed(2) + '€';
+            }
+            //sbet.prev().children(':eq(0)').find('a:eq(1)').text(headerText).css('color', 'blue !important;');
+            console.log(placedValue);
             clearInterval(loop);
         }
     }, 1000);
@@ -342,7 +368,6 @@ if ($(location).attr('href').endsWith('myprofile')) {
     oldButton.parent().append(newButton);
     oldButton.remove();
     newButton.click(function () {
-        alert('Clicked');
         var container = $('#ajaxCont');
         container.html('<img src="../img/load.gif" id="loading" style="margin: 0.75em 2%">');
         //Need to keep jquery in scope
@@ -352,7 +377,6 @@ if ($(location).attr('href').endsWith('myprofile')) {
             url: 'ajax/betHistory.php',
             type: 'POST',
             success: function(data) {
-                alert('Success');
                 container.html(data).slideDown('fast', function () {
                     tidyItems();
                     setItemWidth();
@@ -495,7 +519,7 @@ $(document).ready(function () {
         $(this).addClass('lc-bet-swap');
         $(this).appendTo($(this).prev());
     });
-    $(".simplePagerNav>li>a").click(function () {
+    $(".simplePagerNav > li > a").click(function () {
         setTimeout(function () {
             clickUpdateItems();
         }, 2000);
@@ -506,16 +530,13 @@ $(document).ready(function () {
     });
     setInterval(function () {
         setItemWidth();
-    }, 3000);
+    }(), 3000);
 
     var $loadDelay = 0;
     $(".lc-big-preview-bg, .lc-big-preview, .lc-preview-img").click(function () {
         closePreview();
     });
     updatePreviewBG();
-    // Add donation button to first box of every page
-    $('section.box').first().append('<a class="lc-button lc-donate dullhover" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
-    //    $('#placebut').after('<a class="lc-button" id="lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
     //Sidebar slideout
     $('.lc-sidebar_menu').click(function () {
         $('#submenu').toggleClass('open');

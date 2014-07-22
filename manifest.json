@@ -7,7 +7,7 @@
     "icons": {
         "128": "img/128x128.png"
     },
-    "options_page": "settings.html",
+    "options_page": "settings/settings.html",
     "permissions": [
         "storage",
         "identity",
@@ -46,7 +46,7 @@
             "38": "img/icons/38.png"
         },
         "default_title": "Lounge Companion Settings",
-        "default_popup": "settings.html"
+        "default_popup": "settings/settings.html"
     },
     "content_scripts": [{
         "matches": [
