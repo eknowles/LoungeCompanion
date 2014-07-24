@@ -13,14 +13,30 @@ if (typeof String.prototype.endsWith != 'function') {
     }
 }
 chrome.storage.local.get("backgroundImage", function (fetchedData) {
-    bg = fetchedData.backgroundImage
+    var bg = fetchedData.backgroundImage
     document.body.style.backgroundImage = "url(http://cdn.steamcommunity.com/economy/image/" + bg + ")";
 });
-//Global variable for fixed item size
-var itemSize = 0;
-chrome.storage.local.get("itemSize", function (fetchedData) {
-    itemSize = fetchedData.itemSize;
-    console.log(itemSize);
+/*
+*   GLOBAL VARIABLES
+*/
+//Currency table for getting prices from steam
+var currencies = {
+    1: '$',
+    2: '£',
+    3: '€',
+    5: 'pуб',
+    7: 'R$',
+    8: '¥',
+    9: 'kr',
+    10: 'Rp',
+    11: 'RM',
+    12: 'P',
+    13: 'S$'
+}
+//Default €
+var userCurrency = 3;
+chrome.storage.local.get('currency', function (fetchedData) {
+    userCurrency = fetchedData.currency;
 });
 
 var gameid = ''; // csgo 730, dota2 570
@@ -29,6 +45,8 @@ if ($(location).attr('href').startsWith('http://csgolounge.com/')) {
 } else {
     gameid = '570';
 }
+
+
 var $boxShinyAlt = $('.box-shiny-alt');
 var $boxShiny = $('.box-shiny');
 var $buttonRight = $('.buttonright');
@@ -256,9 +274,9 @@ function setItemWidth() {
         // }
         newItemWidth = (parentWidth / itemRowCount) - 9;
         if (itemSize != 0) {
-            item.css({ 'width': itemSize + 'px'});
+         //   item.css({ 'width': itemSize + 'px'});
         } else {
-            item.css({ 'width': newItemWidth + 'px' });
+        //    item.css({ 'width': newItemWidth + 'px' });
         }
         
         if ($(this).hasClass('Souvenir').toString() == 'true') {
@@ -281,7 +299,7 @@ function sortReturns() {
     items.tsort('div.value', { order: 'desc' });
 }
 function calculateReturnsValue() {
-    var items = $($('.standard')[1]).find('.item');
+    var items = $('.standard:eq(1)').find('.item');
     var value = 0;
     items.each(function (index) {
         value += parseFloat($(this).find('.value').html().replace('$ ', ''));
@@ -326,7 +344,7 @@ function calculateBetValue(bet) {
             bet.first().children().first().append('<br>(' + placedValue.toFixed(2) + '€)');
             clearInterval(loop);
         }
-    }, 1000);
+    }, 500);
 }
 // If page is match page
 if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
@@ -357,6 +375,11 @@ if ($(location).attr('href').endsWith('mybets')) {
         'width'     : '45%',
         'text-align': 'left'
     });
+    var title = $('div .title:eq(1)');
+    if (title.text() == 'returns') {
+        var items = $('.standard:eq(1)').find('.item');
+        title.text( title.text() + ' (' + '$' + calculateReturnsValue().toFixed(2) + ' | ' + items.length + ' items' + ')');
+    } 
 }
 // If page is myprofile
 if ($(location).attr('href').endsWith('myprofile')) {
@@ -510,51 +533,56 @@ function updatePreviewBG() {
         'width' : $(window).width() + 'px'
     });
 }
-$(document).ready(function () {
-    var $previewBackground = $('.lc-big-preview-bg');
-    var $previewForeground = $('.lc-big-preview');
-    var $calcButton = $("a:contains('Calculate reward')");
-    clickUpdateItems();
-    addSideMenuOptions();
-    $('.lc-preview-spinner').css({
-        'top' : ($(window).height() / 2) + 'px',
-        'left': ($(window).width() / 2) - (32 / 2) + 'px'
-    });
-    $("span:contains('Potential reward:')").css('display', 'none');
-    $('.matchheader').find('.lc-button').each(function (index) {
-        $(this).removeClass('lc-button');
-        $(this).addClass('lc-bet-swap');
-        $(this).appendTo($(this).prev());
-    });
-    $(".simplePagerNav > li > a").click(function () {
-        setTimeout(function () {
-            clickUpdateItems();
-        }, 2000);
-    });
-    clickUpdateItems();
-    $(".UpdateItemsAll").click(function () {
-        tidyItems();
-    });
-    setInterval(function () {
-        setItemWidth();
-    }(), 3000);
+//Global variable for fixed item size
+var itemSize = 185;
+//Always load itemSize before loading page to avoid flickering items
+chrome.storage.local.get("itemSize", function (fetchedData) {
+    itemSize = fetchedData.itemSize;
+    console.log(itemSize);
+    $(document).ready(function () {
+        var $previewBackground = $('.lc-big-preview-bg');
+        var $previewForeground = $('.lc-big-preview');
+        var $calcButton = $("a:contains('Calculate reward')");
+        clickUpdateItems();
+        addSideMenuOptions();
+        $('.lc-preview-spinner').css({
+            'top' : ($(window).height() / 2) + 'px',
+            'left': ($(window).width() / 2) - (32 / 2) + 'px'
+        });
+        $("span:contains('Potential reward:')").css('display', 'none');
+        $('.matchheader').find('.lc-button').each(function (index) {
+            $(this).removeClass('lc-button');
+            $(this).addClass('lc-bet-swap');
+            $(this).appendTo($(this).prev());
+        });
+        $(".simplePagerNav > li > a").click(function () {
+            setTimeout(function () {
+                clickUpdateItems();
+            }, 2000);
+        });
+        clickUpdateItems();
+        $(".UpdateItemsAll").click(function () {
+            tidyItems();
+        });
+        console.log('Before css');
+        $('.item').css('width', itemSize + 'px');
+        setInterval(function () {
+            setItemWidth();
+        }(), 3000);
 
-    var $loadDelay = 0;
-    $(".lc-big-preview-bg, .lc-big-preview, .lc-preview-img").click(function () {
-        closePreview();
-    });
-    updatePreviewBG();
-    //Sidebar slideout
-    $('.lc-sidebar_menu').click(function () {
-        $('#submenu').toggleClass('open');
-    });
-    sortReturns();
-    //Add value of returned items to the title if we have the right title
-    var title = $($('div .title')[1]);
-    if (title.text() == 'returns') {
-        title.text( title.text() + ' (' + '$' + calculateReturnsValue().toFixed(2) + ')');
-    } 
+        var $loadDelay = 0;
+        $(".lc-big-preview-bg, .lc-big-preview, .lc-preview-img").click(function () {
+            closePreview();
+        });
+        updatePreviewBG();
+        //Sidebar slideout
+        $('.lc-sidebar_menu').click(function () {
+            $('#submenu').toggleClass('open');
+        });
+        sortReturns();
+        //Add value of returned items to the title if we have the right title
 
+    });
 });
 $(window).resize(function () {
     setItemWidth();
