@@ -375,6 +375,14 @@ if ($(location).attr('href').endsWith('mybets')) {
         'width'     : '45%',
         'text-align': 'left'
     });
+    $('.lc-bet-pot').each(function (index) {
+        var placedValue = 0;
+        $(this).find('.value').each(function (index) {
+            placedValue += parseFloat($(this).text().replace('$ ', ''));
+        });
+        $(this).next().next().append('<div class="potwin Value", style="margin-right:5px !important;"><b>$' + placedValue + '</div>');
+    });
+    //Add returns value and amount of items to title
     var title = $('div .title:eq(1)');
     if (title.text() == 'returns') {
         var items = $('.standard:eq(1)').find('.item');
