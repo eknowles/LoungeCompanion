@@ -380,7 +380,7 @@ if ($(location).attr('href').endsWith('mybets')) {
         $(this).find('.value').each(function (index) {
             placedValue += parseFloat($(this).text().replace('$ ', ''));
         });
-        $(this).next().next().append('<div class="potwin Value", style="margin-right:5px !important;"><b>$' + placedValue + '</div>');
+        $(this).next().next().append('<div class="potwin Value", style="margin-right:5px !important;"><b>$' + placedValue.toFixed(2) + '</b> Placed</div>');
     });
     //Add returns value and amount of items to title
     var title = $('div .title:eq(1)');
@@ -410,6 +410,20 @@ if ($(location).attr('href').endsWith('myprofile')) {
             type: 'POST',
             success: function(data) {
                 container.html(data).slideDown('fast', function () {
+                    //Add preview buttons to new content
+                    $('.rarity').hover(
+                        function () {
+                            var $this = $(this); // caching $(this)
+                            $this.data('initialText', $this.text());
+                            $this.text('Open Preview');
+                            $this.addClass('lc-hover-preview-active');
+                        },
+                        function () {
+                            var $this = $(this); // caching $(this)
+                            $this.text($this.data('initialText'));
+                            $this.removeClass('lc-hover-preview-active');
+                        }
+                    );
                     //Add closed class to closed matches
                     $('span:contains(closed)').attr('class', 'closed');
                     tidyItems();
