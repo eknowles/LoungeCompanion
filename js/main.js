@@ -46,6 +46,7 @@ if ($(location).attr('href').startsWith('http://csgolounge.com/')) {
     gameid = '570';
 }
 
+var selectedHistory = [];
 
 var $boxShinyAlt = $('.box-shiny-alt');
 var $boxShiny = $('.box-shiny');
@@ -306,7 +307,7 @@ function calculateReturnsValue() {
     });
     return value;
 }
-function calculateBetValue(bet) {
+function calculateBetValue(bet, callback) {
     //Get prices for all items
     bet.find(".item[class!='priced']").each(function () {
         priceItem($(this));
@@ -343,8 +344,24 @@ function calculateBetValue(bet) {
             //Temporary currency
             bet.first().children().first().append('<br>(' + placedValue.toFixed(2) + '€)');
             clearInterval(loop);
+            callback();
         }
     }, 500);
+}
+function updateSelectedHistory() {
+    if (selectedHistory.length > 0) {
+        var winsAmount = 0;
+        var lossesAmount = 0;
+        selectedHistory.each(function () {
+            if ($(this).find('td:contains(lost)').length > 0) {
+
+            } else if ($(this).find('td:contains(won)').length > 0) {
+
+            }
+        });
+    } else {
+        $('#selectedHistory').remove();
+    }
 }
 // If page is match page
 if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
@@ -375,19 +392,28 @@ if ($(location).attr('href').endsWith('mybets')) {
         'width'     : '45%',
         'text-align': 'left'
     });
+    var totalPlacedValue = 0;
+    var totalRewardValue = 0;
     $('.lc-bet-pot').each(function (index) {
         var placedValue = 0;
         $(this).find('.value').each(function (index) {
             placedValue += parseFloat($(this).text().replace('$ ', ''));
         });
+        totalRewardValue += parseFloat($(this).parent().find('.potwin:contains(Value)').find('b').text());
+        totalPlacedValue += placedValue;
         $(this).next().next().append('<div class="potwin Value", style="margin-right:5px !important;"><b>$' + placedValue.toFixed(2) + '</b> Placed</div>');
     });
+    if (totalPlacedValue != 0 || totalRewardValue != 0) {
+        var mybetsTitle = $('.title:contains(my bets)');
+        mybetsTitle.text(mybetsTitle.text() + " (Placed: $" + totalPlacedValue.toFixed(2) + " | Reward: $" + totalRewardValue.toFixed(2) + ")");
+    }
     //Add returns value and amount of items to title
     var title = $('div .title:eq(1)');
     if (title.text() == 'returns') {
         var items = $('.standard:eq(1)').find('.item');
         title.text( title.text() + ' (' + '$' + calculateReturnsValue().toFixed(2) + ' | ' + items.length + ' items' + ')');
-    } 
+    }
+
 }
 // If page is myprofile
 if ($(location).attr('href').endsWith('myprofile')) {
@@ -437,11 +463,16 @@ if ($(location).attr('href').endsWith('myprofile')) {
                         var betIdString = $(this).attr('onclick');
                         var betId = betIdString.substring(3, betIdString.indexOf("'", 4));
                         //Link for calculating bet values
-                        var link = $('<a style="margin-left:5px">$</a>');
-                        link.click(function () {
-                            calculateBetValue($(betId));
+                        var valueLink = $('<a style="margin-left:5px">$</a>');
+                        valueLink.click(function () {
+                            calculateBetValue($(betId), function () { console.log("Done updating") });
                         });
-                        $(this).parent().append(link);
+                        $(this).parent().append(valueLink);
+                        var selectLink = $('<a style="margin-left:5px; color: red !important">X</a>');
+                        selectLink.click(function () {
+                            alert("Clicked");
+                        });
+                        $(this).parent().append(selectLink);
                     });
                 });
             }
