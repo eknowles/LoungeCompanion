@@ -13,15 +13,41 @@ if (typeof String.prototype.endsWith != 'function') {
     }
 }
 chrome.storage.local.get("backgroundImage", function (fetchedData) {
-    bg = fetchedData.backgroundImage
+    var bg = fetchedData.backgroundImage
     document.body.style.backgroundImage = "url(http://cdn.steamcommunity.com/economy/image/" + bg + ")";
 });
+/*
+*   GLOBAL VARIABLES
+*/
+//Currency table for getting prices from steam
+var currencies = {
+    1: '$',
+    2: '£',
+    3: '€',
+    5: 'pуб',
+    7: 'R$',
+    8: '¥',
+    9: 'kr',
+    10: 'Rp',
+    11: 'RM',
+    12: 'P',
+    13: 'S$'
+}
+//Default €
+var userCurrency = 3;
+chrome.storage.local.get('currency', function (fetchedData) {
+    userCurrency = fetchedData.currency;
+});
+
 var gameid = ''; // csgo 730, dota2 570
 if ($(location).attr('href').startsWith('http://csgolounge.com/')) {
     gameid = '730';
 } else {
     gameid = '570';
 }
+
+var selectedHistory = [];
+
 var $boxShinyAlt = $('.box-shiny-alt');
 var $boxShiny = $('.box-shiny');
 var $buttonRight = $('.buttonright');
@@ -71,33 +97,28 @@ function priceSimilarItems(item) {
 }
 
 function priceItem(SearchItem) {
-    if (SearchItem.hasClass('priced')) {
-        // has already set a price so dont do anything
-    } else {
+    // has already set a price so dont do anything
+    if (!SearchItem.hasClass('priced')) {
         SearchItem.find('.rarity').html('Loading...');
-        var itemurl = "http://steamcommunity.com/market/listings/" + gameid + "/" + SearchItem.find('img.smallimg').attr("alt") + "/";
+        //Temporary until settings
+        var currency = 3;
+        var itemName = SearchItem.find('img.smallimg').attr("alt");
+        var itemUrl = "http://steamcommunity.com/market/priceoverview/?country=US&currency=" + currency + "&appid=" + gameid + "&market_hash_name=" + itemName;
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", itemurl, true);
+        xhr.open("GET", itemUrl, true);
         xhr.withCredentials = true;
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
-                var item_price = xhr.responseText.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/g);
-                if (item_price) {
-                    $(item_price).each(function (index, value) {
-                        if (!(value.match(/\!/))) {
-                            item_to_get = value.match(/<span class="market_listing_price market_listing_price_with_fee">\r\n(.+)<\/span>/);
-                            return false;
-                        }
-                    });
-                    lowest_price = item_to_get[1].trim();
-                    SearchItem.find('.rarity').html(lowest_price);
-                    SearchItem.addClass('priced');
-                    priceSimilarItems(SearchItem);
-                } else {
-                    SearchItem.find('.rarity').html('Not Found');
-                }
+                var response = jQuery.parseJSON(xhr.responseText);
+                lowest_price = parseFloat(response.lowest_price.substring(0, 4).replace(',','.'));
+                //Temporary currency symbol
+                SearchItem.find('.rarity').html(lowest_price + '€');
+                SearchItem.addClass('priced');
+                priceSimilarItems(SearchItem);
+            } else {
+                SearchItem.find('.rarity').html('Not Found');
             }
-        };
+        }
         xhr.send();
     }
 }
@@ -253,9 +274,12 @@ function setItemWidth() {
         //     itemRowCount = itemRowCount - 1;
         // }
         newItemWidth = (parentWidth / itemRowCount) - 9;
-        item.css({
-            'width': newItemWidth + 'px'
-        });
+        if (itemSize != 0) {
+         //   item.css({ 'width': itemSize + 'px'});
+        } else {
+        //    item.css({ 'width': newItemWidth + 'px' });
+        }
+        
         if ($(this).hasClass('Souvenir').toString() == 'true') {
             if ($(this).children('div.lc-souvenir').length == 0) {
                 $(this).append('<div class="lc-souvenir"><img src="" alt="Souvenir"/></div>');
@@ -270,6 +294,75 @@ function setItemWidth() {
         // $delayFadeIn += 10;
     });
 }
+//Sort the returned items by their value
+function sortReturns() {
+    var items = $($('.standard')[1]).find('.item');
+    items.tsort('div.value', { order: 'desc' });
+}
+function calculateReturnsValue() {
+    var items = $('.standard:eq(1)').find('.item');
+    var value = 0;
+    items.each(function (index) {
+        value += parseFloat($(this).find('.value').html().replace('$ ', ''));
+    });
+    return value;
+}
+function calculateBetValue(bet, callback) {
+    //Get prices for all items
+    bet.find(".item[class!='priced']").each(function () {
+        priceItem($(this));
+    });
+
+    //Wait until all items have been priced
+    var loop = setInterval(function () {
+        if (bet.find('.item:not(.priced)').length == 0) {
+            function sumItems(items) {
+                var totalValue = 0;
+                items.each(function (index) {
+                    //Temporary currency
+                    var value = parseFloat($(this).find('.rarity').text().replace('€', ''));
+                    if (!isNaN(value)) {
+                        totalValue += value;
+                    }
+                });
+                return totalValue;
+            }
+            var placedValue = sumItems(bet.first().find('.item'));
+            var headerText = '';
+            //Bet was won
+            if (bet.last().children().length > 1) {
+                var wonValue = sumItems(bet.last().find('.item'));
+                //Temporary currency
+                headerText = wonValue.toFixed(2) + '€';
+                bet.last().children().first().append('<br>(' + wonValue.toFixed(2) + '€)');
+            } else { //Bet was lost
+                headerText = placedValue.toFixed(2) + '€';
+            }
+            //Set header text
+            bet.prev().find('span').text(headerText)
+            //Add placed items value
+            //Temporary currency
+            bet.first().children().first().append('<br>(' + placedValue.toFixed(2) + '€)');
+            clearInterval(loop);
+            callback();
+        }
+    }, 500);
+}
+function updateSelectedHistory() {
+    if (selectedHistory.length > 0) {
+        var winsAmount = 0;
+        var lossesAmount = 0;
+        selectedHistory.each(function () {
+            if ($(this).find('td:contains(lost)').length > 0) {
+
+            } else if ($(this).find('td:contains(won)').length > 0) {
+
+            }
+        });
+    } else {
+        $('#selectedHistory').remove();
+    }
+}
 // If page is match page
 if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
     $('section.box').first().next().find('.gradient').append('<div id="disqus_thread"></div>');
@@ -279,7 +372,7 @@ if ($(location).attr('href').startsWith('http://csgolounge.com/match?m')) {
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 
-    }
+}
 // If page is mybets
 if ($(location).attr('href').endsWith('mybets')) {
     $('#freezebutton').after('<a class="lc-button lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
@@ -299,13 +392,91 @@ if ($(location).attr('href').endsWith('mybets')) {
         'width'     : '45%',
         'text-align': 'left'
     });
+    var totalPlacedValue = 0;
+    var totalRewardValue = 0;
+    $('.lc-bet-pot').each(function (index) {
+        var placedValue = 0;
+        $(this).find('.value').each(function (index) {
+            placedValue += parseFloat($(this).text().replace('$ ', ''));
+        });
+        totalRewardValue += parseFloat($(this).parent().find('.potwin:contains(Value)').find('b').text());
+        totalPlacedValue += placedValue;
+        $(this).next().next().append('<div class="potwin Value", style="margin-right:5px !important;"><b>$' + placedValue.toFixed(2) + '</b> Placed</div>');
+    });
+    if (totalPlacedValue != 0 || totalRewardValue != 0) {
+        var mybetsTitle = $('.title:contains(my bets)');
+        mybetsTitle.text(mybetsTitle.text() + " (Placed: $" + totalPlacedValue.toFixed(2) + " | Reward: $" + totalRewardValue.toFixed(2) + ")");
+    }
+    //Add returns value and amount of items to title
+    var title = $('div .title:eq(1)');
+    if (title.text() == 'returns') {
+        var items = $('.standard:eq(1)').find('.item');
+        title.text( title.text() + ' (' + '$' + calculateReturnsValue().toFixed(2) + ' | ' + items.length + ' items' + ')');
+    }
+
 }
 // If page is myprofile
 if ($(location).attr('href').endsWith('myprofile')) {
-    $("a.lc-button:contains('Bet History')").click(function () {
-        console.log('Clicked Bet History');
-        tidyItems();
-        setItemWidth();
+    /*
+    *   BET HISTORY ADDITIONS
+    */
+    //Delete old button and insert a new one so that we can do custom events for it
+    var oldButton = $("a.lc-button:contains('Bet History')");
+    var newButton = $('<a class="lc-button">Bet History</a>');
+    oldButton.parent().append(newButton);
+    oldButton.remove();
+    newButton.click(function () {
+        var container = $('#ajaxCont');
+        container.html('<img src="../img/load.gif" id="loading" style="margin: 0.75em 2%">');
+        //Need to keep jquery in scope
+        var $$ = $;
+        //Get bet historyButton
+        $.ajax({
+            url: 'ajax/betHistory.php',
+            type: 'POST',
+            success: function(data) {
+                container.html(data).slideDown('fast', function () {
+                    //Add preview buttons to new content
+                    $('.rarity').hover(
+                        function () {
+                            var $this = $(this); // caching $(this)
+                            $this.data('initialText', $this.text());
+                            $this.text('Open Preview');
+                            $this.addClass('lc-hover-preview-active');
+                        },
+                        function () {
+                            var $this = $(this); // caching $(this)
+                            $this.text($this.data('initialText'));
+                            $this.removeClass('lc-hover-preview-active');
+                        }
+                    );
+                    //Add closed class to closed matches
+                    $('span:contains(closed)').attr('class', 'closed');
+                    tidyItems();
+                    setItemWidth();
+                    //Register hover event again when the items actually are here
+                    $$(".item").hover( function() { priceItem($$(this)); }, null);
+                    //Every bet has a +
+                    var bets = $("a:contains('+')[class!='info']");
+                    bets.each(function (index) {
+                        $(this).parent().css('white-space', 'nowrap');
+                        var betIdString = $(this).attr('onclick');
+                        var betId = betIdString.substring(3, betIdString.indexOf("'", 4));
+                        //Link for calculating bet values
+                        var valueLink = $('<a style="margin-left:5px">$</a>');
+                        valueLink.click(function () {
+                            calculateBetValue($(betId), function () { console.log("Done updating") });
+                        });
+                        $(this).parent().append(valueLink);
+                        var selectLink = $('<a style="margin-left:5px; color: red !important">X</a>');
+                        selectLink.click(function () {
+                            alert("Clicked");
+                        });
+                        $(this).parent().append(selectLink);
+                    });
+                });
+            }
+        });
     });
     $("a.lc-button:contains('Trade History')").click(function () {
         console.log('Clicked Trade History');
@@ -368,18 +539,22 @@ $('.rarity').hover(
         $this.removeClass('lc-hover-preview-active');
     }
 );
-// Open up the preview modal
-$("a:contains('Preview')").attr("onclick", null);
-$("a:contains('Preview')").click(function () {
-    var poop = $(this).parent().parent().find('.rarity');
-    var newSrc = poop.prev().prev().attr("src").replace("99fx66f", ""); //360fx360f
-    var newName = poop.prev().prev().attr('alt');
-    var steamLink = 'http://steamcommunity.com/market/listings/' + gameid + '/' + newName;
-    $(".lc-preview-img").attr("src", newSrc);
-    $(".lc-preview-title").text(newName);
-    $(".lc-preview-steamlink").attr('href', steamLink);
-    openPreview(poop);
+// Replace regular previews with loungecompanion previews
+$("a:contains('Preview')").each(function (elem) {
+    var newLink = $('<a>Preview</a>');
+    newLink.click(function () {
+        var root = $(this).parent().parent().find('.rarity');
+        var newSrc = root.prev().prev().attr("src").replace("99fx66f", ""); //360fx360f
+        var newName = root.prev().prev().attr('alt');
+        var steamLink = 'http://steamcommunity.com/market/listings/' + gameid + '/' + newName;
+        $(".lc-preview-img").attr("src", newSrc);
+        $(".lc-preview-title").text(newName);
+        $(".lc-preview-steamlink").attr('href', steamLink);
+        openPreview(root);
+    });
+    $(this).replaceWith(newLink);
 });
+
 $(".rarity").click(function () {
     var newSrc = $(this).prev().prev().attr("src").replace("99fx66f", ""); //360fx360f
     var newName = $(this).prev().prev().attr('alt');
@@ -411,45 +586,55 @@ function updatePreviewBG() {
         'width' : $(window).width() + 'px'
     });
 }
-$(document).ready(function () {
-    var $previewBackground = $('.lc-big-preview-bg');
-    var $previewForeground = $('.lc-big-preview');
-    var $calcButton = $("a:contains('Calculate reward')");
-    clickUpdateItems();
-    addSideMenuOptions();
-    $('.lc-preview-spinner').css({
-        'top' : ($(window).height() / 2) + 'px',
-        'left': ($(window).width() / 2) - (32 / 2) + 'px'
-    });
-    $("span:contains('Potential reward:')").css('display', 'none');
-    $('.matchheader').find('.lc-button').each(function (index) {
-        $(this).removeClass('lc-button');
-        $(this).addClass('lc-bet-swap');
-        $(this).appendTo($(this).prev());
-    });
-    $(".simplePagerNav>li>a").click(function () {
-        setTimeout(function () {
-            clickUpdateItems();
-        }, 2000);
-    });
-    clickUpdateItems();
-    $(".UpdateItemsAll").click(function () {
-        tidyItems();
-    });
-    setInterval(function () {
-        setItemWidth();
-    }, 3000);
-    var $loadDelay = 0;
-    $(".lc-big-preview-bg, .lc-big-preview, .lc-preview-img").click(function () {
-        closePreview();
-    });
-    updatePreviewBG();
-    // Add donation button to first box of every page
-    $('section.box').first().append('<a class="lc-button lc-donate dullhover" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
-    //    $('#placebut').after('<a class="lc-button" id="lc-donate" href="http://steamcommunity.com/tradeoffer/new/?partner=79369712&token=RXsEt60_" target="_blank"><i class="fa fa-heart"></i> Donate to Lounge Companion </a>');
-    //Sidebar slideout
-    $('.lc-sidebar_menu').click(function () {
-        $('#submenu').toggleClass('open');
+//Global variable for fixed item size
+var itemSize = 185;
+//Always load itemSize before loading page to avoid flickering items
+chrome.storage.local.get("itemSize", function (fetchedData) {
+    itemSize = fetchedData.itemSize;
+    console.log(itemSize);
+    $(document).ready(function () {
+        var $previewBackground = $('.lc-big-preview-bg');
+        var $previewForeground = $('.lc-big-preview');
+        var $calcButton = $("a:contains('Calculate reward')");
+        clickUpdateItems();
+        addSideMenuOptions();
+        $('.lc-preview-spinner').css({
+            'top' : ($(window).height() / 2) + 'px',
+            'left': ($(window).width() / 2) - (32 / 2) + 'px'
+        });
+        $("span:contains('Potential reward:')").css('display', 'none');
+        $('.matchheader').find('.lc-button').each(function (index) {
+            $(this).removeClass('lc-button');
+            $(this).addClass('lc-bet-swap');
+            $(this).appendTo($(this).prev());
+        });
+        $(".simplePagerNav > li > a").click(function () {
+            setTimeout(function () {
+                clickUpdateItems();
+            }, 2000);
+        });
+        clickUpdateItems();
+        $(".UpdateItemsAll").click(function () {
+            tidyItems();
+        });
+        console.log('Before css');
+        $('.item').css('width', itemSize + 'px');
+        setInterval(function () {
+            setItemWidth();
+        }(), 3000);
+
+        var $loadDelay = 0;
+        $(".lc-big-preview-bg, .lc-big-preview, .lc-preview-img").click(function () {
+            closePreview();
+        });
+        updatePreviewBG();
+        //Sidebar slideout
+        $('.lc-sidebar_menu').click(function () {
+            $('#submenu').toggleClass('open');
+        });
+        sortReturns();
+        //Add value of returned items to the title if we have the right title
+
     });
 });
 $(window).resize(function () {

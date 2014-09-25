@@ -1,10 +1,8 @@
 // Saves options to localStorage.
 function save_options() {
-    //Background
     var background = $('#backgrounds').val();
     chrome.storage.local.set({'backgroundImage': background}, function () {
     });
-    //Item size
     if ($("#fixedSize").is(':checked')) {
         $('input.sizeRadio').each(function () {
             if ($(this).is(':checked')) {
@@ -33,8 +31,6 @@ function save_options() {
     } else {
         chrome.storage.local.set({ 'itemSize': 185 });
     }
-    //Currency
-    chrome.storage.local.set({ 'currency': $('#currency').val() });
     window.close();  
 }
 // Resets bg options to localStorage.
@@ -44,7 +40,6 @@ function reset_options() {
         $("#backgrounds").val(background);
     });
     chrome.storage.local.set({ 'itemSize': 185 });
-    chrome.storage.local.set({ 'currency': 3});
 }
 // Restores select box state to saved value from localStorage.
 function restore_options() {
@@ -53,7 +48,6 @@ function restore_options() {
         $("#backgrounds").val(bg);
     });
     chrome.storage.local.get('itemSize', function (fetchedData) {
-        $('span.label-warning').text("test");
         if (fetchedData.itemSize != null) {
             $('#fixedSize').prop('checked', true);
             $('#fixedSize').trigger('change');
@@ -69,10 +63,6 @@ function restore_options() {
                 $('input.sizeInput').val(fetchedData.itemSize);
             }
         }
-    });
-    chrome.storage.local.get('currency', function (fetchedData) {
-
-        $('#currency').val(fetchedData.currency);
     });
 }
 //Show item size controls if checkbox checked
